@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -53,5 +54,8 @@ next-env.d.ts
 /public/hero_lightning_*.png
 /public/futuristic_*.png
 .edge_*
+.data/
+/screenshots/
+*.log
 
 

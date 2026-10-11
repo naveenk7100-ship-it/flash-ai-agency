@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { sendWhatsAppAlert, sendEmailAlert } from "@/lib/notifications";
 import { BookingSubmission } from "@/lib/types";
+import { authenticateAdminRequest } from "@/lib/auth";
 
 // In-memory rate limiting map for basic DDoS/spam prevention
 const submissionTimestamps = new Map<string, number[]>();
@@ -23,13 +24,21 @@ function checkRateLimit(ip: string): boolean {
   return true;
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const auth = await authenticateAdminRequest(req);
+    if (!auth.authenticated) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized: Admin session required." },
+        { status: 401 }
+      );
+    }
+
     const bookings = await db.getBookings();
     return NextResponse.json({
       success: true,
       count: bookings.length,
-      storageType: db.isCloudConfigured() ? "upstash_redis" : "serverless_warm_memory",
+      storageType: db.isCloudConfigured() ? "upstash_redis" : "persistent_local",
       bookings
     });
   } catch (error: any) {
@@ -69,10 +78,33 @@ export async function POST(req: Request) {
       timezone,
       budgetRange,
       projectBrief,
-      referenceLinks
+      referenceLinks,
+      _hp_company_fax,
+      _submission_time
     } = body;
 
-    // 2. Server-side Validation
+    // 2. Anti-spam honeypot detection: bots auto-fill hidden inputs
+    if (_hp_company_fax && String(_hp_company_fax).trim().length > 0) {
+      // Return 200 so bot does not retry, but discard data
+      return NextResponse.json({
+        success: true,
+        message: "Booking request successfully received. Our team will review it shortly.",
+        booking: { id: "hp-filtered", fullName: String(fullName || "Guest").trim() }
+      });
+    }
+
+    // 3. Minimum interaction time check (protect against instant script submissions)
+    if (_submission_time && Date.now() - Number(_submission_time) < 1200) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Form was submitted abnormally fast. Please review your details and try again."
+        },
+        { status: 429 }
+      );
+    }
+
+    // 4. Server-side Validation
     if (!fullName || !email || !company || !serviceId || !projectBrief || !preferredDate) {
       return NextResponse.json(
         {
@@ -94,6 +126,20 @@ export async function POST(req: Request) {
         },
         { status: 400 }
       );
+    }
+
+    // Phone format check if provided
+    if (phone) {
+      const cleanPhone = String(phone).replace(/[^\d+]/g, "");
+      if (cleanPhone.length < 7 || cleanPhone.length > 18) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Please provide a valid phone number (at least 7 digits)."
+          },
+          { status: 400 }
+        );
+      }
     }
 
     // 3. Spam / Duplicate Prevention (same email + same brief within 2 minutes)
@@ -158,7 +204,7 @@ export async function POST(req: Request) {
       booking: newBooking,
       storage: {
         persisted: true,
-        type: db.isCloudConfigured() ? "upstash_redis" : "serverless_warm_memory"
+        type: db.getDatabaseInfo().provider
       },
       notifications: {
         whatsapp: whatsappResult,

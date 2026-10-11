@@ -1,15 +1,19 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { AGENCY_SERVICES } from "@/lib/data";
+import { authenticateAdminRequest } from "@/lib/auth";
 
 export async function POST(req: Request) {
   try {
+    const auth = await authenticateAdminRequest(req);
     const body = await req.json();
     const { action, adminKey } = body;
 
-    // 1. Server-side Secret Verification
+    // 1. Server-side Verification (Session Cookie, Bearer Token, or Admin Secret Key)
     const secret = process.env.ADMIN_SECRET_KEY || "flash-admin-2026";
-    if (adminKey !== secret) {
+    const isAuthorized = auth.authenticated || (adminKey && adminKey === secret);
+
+    if (!isAuthorized) {
       return NextResponse.json(
         { success: false, error: "Unauthorized: Invalid administrative credentials." },
         { status: 401 }

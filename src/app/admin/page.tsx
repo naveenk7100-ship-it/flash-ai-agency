@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   ShieldCheck,
   Lock,
@@ -95,29 +96,58 @@ export default function AdminDashboardPage() {
   };
 
   useEffect(() => {
-    const saved =
-      typeof window !== "undefined" ? sessionStorage.getItem("flash_admin_key") : null;
-    if (saved) {
-      setAdminKey(saved);
-      fetch("/api/admin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "getStats", adminKey: saved })
+    // 1. Check session cookie
+    fetch("/api/admin/me")
+      .then((r) => r.json())
+      .then((meData) => {
+        if (meData.authenticated) {
+          fetch("/api/admin", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "getStats" })
+          })
+            .then((r) => r.json())
+            .then((d) => {
+              if (d.success) {
+                setIsAuthenticated(true);
+                setStats(d.stats);
+                setBookings(d.bookings);
+                setContacts(d.contacts);
+                setProjects(d.projects);
+                setReviews(d.reviews);
+                setServices(d.services);
+              }
+            })
+            .catch(() => {});
+          return;
+        }
+
+        // 2. Fallback to saved session key
+        const saved =
+          typeof window !== "undefined" ? sessionStorage.getItem("flash_admin_key") : null;
+        if (saved) {
+          setAdminKey(saved);
+          fetch("/api/admin", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "getStats", adminKey: saved })
+          })
+            .then((r) => r.json())
+            .then((d) => {
+              if (d.success) {
+                setIsAuthenticated(true);
+                setStats(d.stats);
+                setBookings(d.bookings);
+                setContacts(d.contacts);
+                setProjects(d.projects);
+                setReviews(d.reviews);
+                setServices(d.services);
+              }
+            })
+            .catch(() => {});
+        }
       })
-        .then((r) => r.json())
-        .then((d) => {
-          if (d.success) {
-            setIsAuthenticated(true);
-            setStats(d.stats);
-            setBookings(d.bookings);
-            setContacts(d.contacts);
-            setProjects(d.projects);
-            setReviews(d.reviews);
-            setServices(d.services);
-          }
-        })
-        .catch(() => {});
-    }
+      .catch(() => {});
   }, []);
 
   const refreshData = () => {
@@ -386,6 +416,13 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="flex items-center gap-3">
+            <Link
+              href="/admin/leads"
+              className="text-xs font-semibold px-3 py-2 rounded-lg text-[#3b563d] bg-[#3b563d]/10 border border-[#3b563d]/20 hover:bg-[#3b563d]/20 transition-colors flex items-center gap-1.5 shadow-sm"
+            >
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>CRM Leads Pipeline &rarr;</span>
+            </Link>
             <button
               onClick={refreshData}
               className="btn-sage-secondary text-xs py-2 px-3 flex items-center gap-1.5"
@@ -393,8 +430,11 @@ export default function AdminDashboardPage() {
               <RefreshCw className="w-3.5 h-3.5 text-[#5f8861]" /> Refresh
             </button>
             <button
-              onClick={() => {
+              onClick={async () => {
                 sessionStorage.removeItem("flash_admin_key");
+                try {
+                  await fetch("/api/admin/logout", { method: "POST" });
+                } catch {}
                 setIsAuthenticated(false);
               }}
               className="text-xs font-semibold px-3 py-2 rounded-lg text-rose-700 bg-rose-50 border border-rose-200 hover:bg-rose-100 transition-colors"

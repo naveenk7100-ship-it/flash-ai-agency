@@ -90,11 +90,31 @@ export interface ContactSubmission {
   id: string;
   name: string;
   email: string;
+  phone?: string;
   subject: string;
   message: string;
   source?: string;
   status: "unread" | "read" | "replied";
   createdAt: string;
+}
+
+export type LeadStatus = "New" | "Contacted" | "In Progress" | "Converted" | "Archived";
+
+export interface Lead {
+  id: string;
+  type: "booking" | "contact" | "enquiry";
+  name: string;
+  email: string;
+  phone: string;
+  service: string;
+  message: string;
+  company?: string;
+  budget?: string;
+  preferredDate?: string;
+  status: LeadStatus;
+  notes?: string;
+  createdAt: string;
+  source?: string;
 }
 
 export interface NotificationResult {

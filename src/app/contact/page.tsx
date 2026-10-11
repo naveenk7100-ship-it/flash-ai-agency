@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Mail, Send, CheckCircle2, AlertCircle, Phone, MapPin, Globe, MessageSquare } from "lucide-react";
 import { WHATSAPP_CONTACTS } from "@/lib/config";
 import { Container } from "@/components/Container";
@@ -9,9 +9,16 @@ export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     subject: "",
-    message: ""
+    message: "",
+    _hp_company_fax: ""
   });
+  const [mountTime, setMountTime] = useState<number>(0);
+
+  useEffect(() => {
+    setMountTime(Date.now());
+  }, []);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<{
     success: boolean;
@@ -25,10 +32,15 @@ export default function ContactPage() {
     setStatus(null);
 
     try {
+      const payload = {
+        ...formData,
+        _submission_time: mountTime
+      };
+
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload)
       });
       const data = await res.json();
 
@@ -38,7 +50,7 @@ export default function ContactPage() {
           message: "Thank you! Your inquiry has been received. Our team will review and reply via email within 24 hours.",
           details: data
         });
-        setFormData({ name: "", email: "", subject: "", message: "" });
+        setFormData({ name: "", email: "", phone: "", subject: "", message: "", _hp_company_fax: "" });
       } else {
         setStatus({
           success: false,
@@ -298,6 +310,22 @@ export default function ContactPage() {
 
                 <div>
                   <label className="block text-xs font-semibold text-[#1c1917] mb-1.5">
+                    Phone / WhatsApp Number
+                  </label>
+                  <input
+                    type="tel"
+                    placeholder="+1 (555) 234-5678 or +91 98765 43210"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-[#e7e2d8] text-xs text-[#1c1917] bg-[#fdfbf7] focus:outline-none focus:border-[#5f8861]"
+                  />
+                  <p className="text-[11px] text-[#78716c] mt-1">
+                    Include country code if you prefer quick WhatsApp follow-up.
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#1c1917] mb-1.5">
                     Subject / Topic *
                   </label>
                   <input
@@ -324,10 +352,23 @@ export default function ContactPage() {
                   />
                 </div>
 
+                {/* Honeypot anti-spam field: hidden from real users */}
+                <div className="hidden" aria-hidden="true">
+                  <label>Leave this field empty</label>
+                  <input
+                    type="text"
+                    name="_hp_company_fax"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={formData._hp_company_fax}
+                    onChange={(e) => setFormData({ ...formData, _hp_company_fax: e.target.value })}
+                  />
+                </div>
+
                 <button
                   type="submit"
                   disabled={loading}
-                  className="btn-sage-primary w-full py-3 text-xs tracking-wider uppercase font-bold disabled:opacity-50"
+                  className="btn-sage-primary w-full py-3 text-xs tracking-wider uppercase font-bold disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {loading ? "Sending Message..." : "Dispatch Message"}
                   <Send className="w-3.5 h-3.5" />

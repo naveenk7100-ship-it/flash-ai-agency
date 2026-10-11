@@ -31,15 +31,34 @@ async function testViewport(url, width, height, label, port = 9230) {
     url
   ]);
 
-  await sleep(3000);
+  // Poll for browser ready
+  let list = null;
+  for (let attempt = 0; attempt < 20; attempt++) {
+    try {
+      list = await new Promise((resolve, reject) => {
+        const req = http.get(`http://127.0.0.1:${port}/json/list`, (r) => {
+          let d = "";
+          r.on("data", (c) => (d += c));
+          r.on("end", () => {
+            try {
+              resolve(JSON.parse(d));
+            } catch (err) {
+              reject(err);
+            }
+          });
+        });
+        req.on("error", reject);
+        req.setTimeout(1500, () => req.destroy());
+      });
+      if (Array.isArray(list) && list.length > 0) break;
+    } catch {}
+    await sleep(600);
+  }
 
-  const list = await new Promise((res, rej) => {
-    http.get(`http://127.0.0.1:${port}/json/list`, (r) => {
-      let d = "";
-      r.on("data", (c) => (d += c));
-      r.on("end", () => res(JSON.parse(d)));
-    }).on("error", rej);
-  });
+  if (!list || list.length === 0) {
+    proc.kill();
+    throw new Error(`Edge did not open debugging port ${port}`);
+  }
 
   const page = list.find((t) => t.type === "page" && (t.url.includes("3001") || !t.url.includes("chrome://"))) || list[0];
   const ws = new WebSocket(page.webSocketDebuggerUrl);

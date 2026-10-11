@@ -35,8 +35,14 @@ function BookingFormContent() {
     projectBrief: projectRef
       ? `Inquiring about an architecture similar to the "${projectRef}" case study. `
       : "",
-    referenceLinks: ""
+    referenceLinks: "",
+    _hp_company_fax: ""
   });
+  const [mountTime, setMountTime] = useState<number>(0);
+
+  useEffect(() => {
+    setMountTime(Date.now());
+  }, []);
 
   useEffect(() => {
     if (preselectedService) {
@@ -57,10 +63,15 @@ function BookingFormContent() {
     setResponseStatus(null);
 
     try {
+      const payload = {
+        ...formData,
+        _submission_time: mountTime
+      };
+
       const res = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload)
       });
       const data = await res.json();
 
@@ -83,7 +94,8 @@ function BookingFormContent() {
           timezone: "UTC",
           budgetRange: "$1,500 - $3,000",
           projectBrief: "",
-          referenceLinks: ""
+          referenceLinks: "",
+          _hp_company_fax: ""
         });
       } else {
         setResponseStatus({
@@ -313,11 +325,24 @@ function BookingFormContent() {
             />
           </div>
 
+          {/* Honeypot anti-spam field: hidden from real users */}
+          <div className="hidden" aria-hidden="true">
+            <label>Leave this field empty</label>
+            <input
+              type="text"
+              name="_hp_company_fax"
+              tabIndex={-1}
+              autoComplete="off"
+              value={formData._hp_company_fax}
+              onChange={(e) => setFormData({ ...formData, _hp_company_fax: e.target.value })}
+            />
+          </div>
+
           {/* Submit */}
           <button
             type="submit"
             disabled={loading}
-            className="btn-sage-primary w-full py-3 text-xs tracking-wider uppercase font-bold disabled:opacity-50"
+            className="btn-sage-primary w-full py-3 text-xs tracking-wider uppercase font-bold disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {loading ? "Saving Booking Request..." : "Submit Discovery Call Request"}
             <Send className="w-3.5 h-3.5" />
