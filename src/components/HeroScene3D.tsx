@@ -31,14 +31,15 @@ export function HeroScene3D() {
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
-      powerPreference: "high-performance"
+      powerPreference: "high-performance",
+      preserveDrawingBuffer: true
     });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.2;
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
     container.appendChild(renderer.domElement);
 
     // 2. Sophisticated Studio Lighting Rig
@@ -283,59 +284,72 @@ export function HeroScene3D() {
     // Perform immediate initial render so canvas is never blank
     renderer.render(scene, camera);
 
-    // Respect reduced motion settings
+    // Respect reduced motion settings gracefully without freezing the scene completely
     const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const motionScale = prefersReducedMotion ? 0.45 : 1.0;
 
-    // 8. Continuous Render Loop with Restrained Harmonic Motion
+    // 8. Continuous Render Loop with Real, Visible, Fluid Motion
     let animationFrameId: number;
-    const clock = new THREE.Clock();
+    const startTime = performance.now();
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
 
-      // Pause rendering when user has scrolled past the hero section (>750px) to conserve GPU
-      if (typeof window !== "undefined" && window.scrollY > 750) {
+      // Only pause when scrolled deeply past the hero section (>1200px)
+      if (typeof window !== "undefined" && window.scrollY > 1200) {
         return;
       }
 
-      const elapsedTime = clock.getElapsedTime();
+      const elapsedTime = (performance.now() - startTime) * 0.001;
 
-      // If reduced motion is requested, render clean stable pose
-      if (prefersReducedMotion) {
-        sculptureGroup.rotation.y = baseRotationY;
-        sculptureGroup.rotation.x = 0.08;
-        renderer.render(scene, camera);
-        return;
-      }
-
-      // Gentle ambient oscillation around the proud brand presentation angle
-      const ambientY = Math.sin(elapsedTime * 0.5) * 0.25;
-      const scrollRotation = scrollProgress * 0.8;
-
-      // Parallax easing with subtle scroll pitch
+      // 1. Ambient rotation & pointer parallax
+      const ambientY = Math.sin(elapsedTime * 0.7) * 0.22 * motionScale;
+      const ambientX = Math.cos(elapsedTime * 0.9) * 0.08 * motionScale;
+      const scrollRotation = scrollProgress * 0.85;
       const scrollTilt = (scrollProgress - 0.5) * 0.35;
-      sculptureGroup.rotation.y += (baseRotationY + ambientY + scrollRotation + mouseX - sculptureGroup.rotation.y) * 0.05;
-      sculptureGroup.rotation.x += (0.08 + mouseY * 0.35 + scrollTilt - sculptureGroup.rotation.x) * 0.05;
 
-      // Subtle float oscillation on the lightning bolt itself
-      const floatY = Math.sin(elapsedTime * 1.5) * 0.07;
+      sculptureGroup.rotation.y += (baseRotationY + ambientY + scrollRotation + mouseX - sculptureGroup.rotation.y) * 0.06;
+      sculptureGroup.rotation.x += (0.08 + ambientX + mouseY * 0.35 + scrollTilt - sculptureGroup.rotation.x) * 0.06;
+
+      // 2. Visible levitation float on the 3D lightning sculpture (~15px visible floating height)
+      const floatY = Math.sin(elapsedTime * 1.8) * 0.22 * motionScale;
       boltMesh.position.y = floatY;
       innerMeshFront.position.y = floatY;
       backMesh.position.y = floatY;
       edgesLines.position.y = floatY;
 
-      // Orbital rings counter-rotation
-      ring1.rotation.z = elapsedTime * (0.07 + scrollProgress * 0.08);
-      ring2.rotation.z = -elapsedTime * (0.05 + scrollProgress * 0.06);
+      // 3. Dynamic energy breathing pulse on the inner luminous core plate
+      innerLuminousMat.emissiveIntensity = 0.55 + Math.sin(elapsedTime * 2.4) * 0.22 * motionScale;
 
-      // Satellite spheres orbital positioning
-      const sat1Angle = elapsedTime * 0.6;
+      // 4. Orbital rings continuous visible 3D rotation
+      ring1.rotation.z = elapsedTime * 0.45 * motionScale;
+      ring2.rotation.z = -elapsedTime * 0.35 * motionScale;
+
+      // 5. Orbiting satellite spheres along their 3D orbital planes
+      const sat1Angle = elapsedTime * 0.9 * motionScale;
       sat1.position.set(Math.cos(sat1Angle) * 3.3, Math.sin(sat1Angle) * 1.5, Math.sin(sat1Angle) * 2.2);
 
-      const sat2Angle = -elapsedTime * 0.5 + 2.0;
+      const sat2Angle = (-elapsedTime * 0.75 + 2.0) * motionScale;
       sat2.position.set(Math.cos(sat2Angle) * 2.8, -Math.sin(sat2Angle) * 2.2, Math.cos(sat2Angle) * 2.4);
 
+      // 6. Atmospheric micro-particles dynamic 3D swirl and drift
+      particles.rotation.y = elapsedTime * 0.12 * motionScale;
+      particles.rotation.x = Math.sin(elapsedTime * 0.5) * 0.06 * motionScale;
+
       renderer.render(scene, camera);
+
+      if (typeof window !== "undefined") {
+        (window as any).__FLASH_HERO__ = {
+          frameCount: (((window as any).__FLASH_HERO__?.frameCount) || 0) + 1,
+          elapsedTime,
+          sculptureRotationY: sculptureGroup.rotation.y,
+          sculptureRotationX: sculptureGroup.rotation.x,
+          ring1Z: ring1.rotation.z,
+          ring2Z: ring2.rotation.z,
+          boltY: boltMesh.position.y,
+          particleRotY: particles.rotation.y
+        };
+      }
     };
 
     animate();

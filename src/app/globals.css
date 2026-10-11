@@ -167,41 +167,38 @@
   transform: translateY(-1.5px);
 }
 
-/* Subtle interactive card lift and scroll accents */
+/* Progressive scroll reveal animations */
 .reveal-item {
-  opacity: 1 !important;
-  transform: translateY(0);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s ease;
+}
+
+/* When progressive enhancement is active via JavaScript */
+.js-reveal .reveal-item {
+  opacity: 0;
+  transform: translateY(28px);
 }
 
 .js-reveal .reveal-item.is-entering {
-  /* Subtle physical elevation rather than opacity fading */
-  animation: gentleLift 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  opacity: 1 !important;
+  transform: translateY(0) !important;
 }
 
-@keyframes gentleLift {
-  from {
-    transform: translateY(10px);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
+/* Stagger delays for cascading rows */
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+.reveal-delay-4 { transition-delay: 0.32s; }
 
-/* Stagger delays */
-.reveal-delay-1 { transition-delay: 0.1s; }
-.reveal-delay-2 { transition-delay: 0.2s; }
-.reveal-delay-3 { transition-delay: 0.3s; }
-.reveal-delay-4 { transition-delay: 0.4s; }
-
-/* Subtle 3D Card Hover Perspective */
+/* 3D Card Hover Perspective */
 .tilt-card {
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
   transform-style: preserve-3d;
 }
 
 .tilt-card:hover {
-  transform: translateY(-4px) scale(1.01);
+  transform: translateY(-5px);
 }
 
 /* Animations & Visual accents */

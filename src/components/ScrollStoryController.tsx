@@ -20,7 +20,7 @@ export function ScrollStoryController() {
     // 2. Add js-reveal class for progressive enhancement
     document.documentElement.classList.add("js-reveal");
 
-    // 3. Intersection Observer to gracefully trigger smooth entrance
+    // 3. Intersection Observer to smoothly trigger scroll entrance
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -30,16 +30,38 @@ export function ScrollStoryController() {
         });
       },
       {
-        threshold: 0.08,
-        rootMargin: "0px 0px -20px 0px"
+        threshold: 0.1,
+        rootMargin: "0px 0px -40px 0px"
       }
     );
 
     const elements = document.querySelectorAll(".reveal-item");
-    elements.forEach((el) => observer.observe(el));
+    elements.forEach((el) => {
+      observer.observe(el);
+
+      // Elements already above or within the viewport immediately trigger smooth entrance
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.95) {
+        // Small micro-delay so CSS transition triggers visibly from initial state
+        requestAnimationFrame(() => {
+          el.classList.add("is-entering");
+        });
+      }
+    });
+
+    // 4. Safety fallback: Ensure any lingering elements are always revealed after 2.5s
+    const fallbackTimeout = setTimeout(() => {
+      elements.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 1.5) {
+          el.classList.add("is-entering");
+        }
+      });
+    }, 2500);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      clearTimeout(fallbackTimeout);
       observer.disconnect();
     };
   }, []);

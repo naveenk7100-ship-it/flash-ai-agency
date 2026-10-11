@@ -52,4 +52,6 @@ next-env.d.ts
 /public/cinematic_*.png
 /public/hero_lightning_*.png
 /public/futuristic_*.png
+.edge_*
+
 
