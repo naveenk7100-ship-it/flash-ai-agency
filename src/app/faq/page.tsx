@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AGENCY_FAQS } from "@/lib/data";
 import { HelpCircle, ArrowRight } from "lucide-react";
+import { Container } from "@/components/Container";
 
 export const metadata = {
   title: "Frequently Asked Questions — Flash.ai Agency",
@@ -10,7 +11,7 @@ export const metadata = {
 export default function FAQPage() {
   return (
     <div className="bg-[#fdfbf7] py-16 md:py-24">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Container>
         <div className="text-center mb-16 space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e5ede5] border border-[#cbdccb] text-[#3b563d] text-xs font-semibold">
             <HelpCircle className="w-3.5 h-3.5" />
@@ -52,7 +53,7 @@ export default function FAQPage() {
             </Link>
           </div>
         </div>
-      </div>
+      </Container>
     </div>
   );
 }

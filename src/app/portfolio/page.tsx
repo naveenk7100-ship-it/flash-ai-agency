@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { PortfolioClient } from "./PortfolioClient";
 import { ShieldCheck } from "lucide-react";
+import { Container } from "@/components/Container";
 
 export const metadata = {
   title: "Portfolio & Case Studies — Flash.ai Agency",
@@ -14,7 +15,7 @@ export default async function PortfolioIndexPage() {
 
   return (
     <div className="bg-[#fdfbf7] py-16 md:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Container>
         {/* Header */}
         <div className="max-w-3xl mx-auto text-center mb-16 space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e5ede5] border border-[#cbdccb] text-[#3b563d] text-xs font-semibold">
@@ -31,7 +32,7 @@ export default async function PortfolioIndexPage() {
 
         {/* Client Interactive Filter & List */}
         <PortfolioClient initialProjects={publishedProjects} />
-      </div>
+      </Container>
     </div>
   );
 }

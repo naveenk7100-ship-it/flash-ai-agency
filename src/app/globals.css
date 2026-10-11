@@ -61,34 +61,27 @@
   }
 }
 
-/* Fluid wide layout container - Centered with max-w-[1440px] and consistent responsive padding */
+/* Shared wide layout container - Centered with max-w-[1600px] and consistent responsive padding */
 .container-wide {
   width: 100%;
-  max-width: 1440px;
+  max-width: 1600px;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
+  padding-left: 1.5rem; /* px-6 */
+  padding-right: 1.5rem;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .container-wide {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: 2.5rem; /* md:px-10 */
+    padding-right: 2.5rem;
   }
 }
 
 @media (min-width: 1024px) {
   .container-wide {
-    padding-left: 2.5rem;
-    padding-right: 2.5rem;
-  }
-}
-
-@media (min-width: 1440px) {
-  .container-wide {
-    padding-left: 3rem;
-    padding-right: 3rem;
+    padding-left: 4rem; /* lg:px-16 */
+    padding-right: 4rem;
   }
 }
 

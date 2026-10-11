@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { Mail, MapPin, ShieldCheck, ArrowUpRight } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
+import { Container } from "@/components/Container";
 
 export function Footer() {
   return (
     <footer className="border-t border-[#e7e2d8] bg-[#f7f4ee] text-[#57534e]">
-      <div className="container-wide py-16">
+      <Container className="py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
@@ -189,7 +190,7 @@ export function Footer() {
             </Link>
           </div>
         </div>
-      </div>
+      </Container>
     </footer>
   );
 }

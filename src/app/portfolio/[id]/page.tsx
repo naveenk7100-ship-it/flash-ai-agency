@@ -16,6 +16,7 @@ import {
   Globe
 } from "lucide-react";
 import { WHATSAPP_CONTACTS } from "@/lib/config";
+import { Container } from "@/components/Container";
 
 interface ProjectDetailProps {
   params: Promise<{ id: string }>;
@@ -48,7 +49,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
 
   return (
     <div className="bg-[#fdfbf7] py-16 md:py-24">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Container>
         {/* Navigation */}
         <div className="mb-8">
           <Link
@@ -344,7 +345,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
             </a>
           </div>
         </div>
-      </div>
+      </Container>
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Mail, Send, CheckCircle2, AlertCircle, Phone, MapPin, Globe, MessageSquare } from "lucide-react";
 import { WHATSAPP_CONTACTS } from "@/lib/config";
+import { Container } from "@/components/Container";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -59,7 +60,7 @@ export default function ContactPage() {
 
   return (
     <div className="bg-[#fdfbf7] py-16 md:py-24">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Container>
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e5ede5] border border-[#cbdccb] text-[#3b563d] text-xs font-semibold">
             <Mail className="w-3.5 h-3.5" />
@@ -335,7 +336,7 @@ export default function ContactPage() {
             </div>
           </div>
         </div>
-      </div>
+      </Container>
     </div>
   );
 }

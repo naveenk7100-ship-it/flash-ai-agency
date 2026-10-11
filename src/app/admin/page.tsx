@@ -31,6 +31,7 @@ import {
   Project,
   Service
 } from "@/lib/types";
+import { Container } from "@/components/Container";
 
 export default function AdminDashboardPage() {
   const [adminKey, setAdminKey] = useState("");
@@ -369,7 +370,7 @@ export default function AdminDashboardPage() {
   /* ========================================================= */
   return (
     <div className="bg-[#fdfbf7] min-h-screen py-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Container>
         {/* Top Bar */}
         <div className="flex flex-col md:flex-row md:items-center justify-between pb-8 mb-8 border-b border-[#e7e2d8] gap-4">
           <div>
@@ -1231,7 +1232,7 @@ export default function AdminDashboardPage() {
             </div>
           </div>
         )}
-      </div>
+      </Container>
     </div>
   );
 }

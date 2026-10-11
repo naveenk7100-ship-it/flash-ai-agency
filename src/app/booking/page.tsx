@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { AGENCY_SERVICES } from "@/lib/data";
+import { Container } from "@/components/Container";
 import {
   Calendar,
   Clock,
@@ -330,7 +331,7 @@ function BookingFormContent() {
 export default function BookingPage() {
   return (
     <div className="bg-[#fdfbf7] py-16 md:py-24">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Container>
         <div className="text-center mb-12 space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e5ede5] border border-[#cbdccb] text-[#3b563d] text-xs font-semibold">
             <Calendar className="w-3.5 h-3.5" />
@@ -347,7 +348,7 @@ export default function BookingPage() {
         <Suspense fallback={<div className="p-12 text-center text-xs text-[#78716c]">Loading booking intake...</div>}>
           <BookingFormContent />
         </Suspense>
-      </div>
+      </Container>
     </div>
   );
 }

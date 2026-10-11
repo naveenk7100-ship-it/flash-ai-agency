@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ShieldCheck, Cpu, Code2, ArrowRight, CheckCircle2, Award, HeartHandshake } from "lucide-react";
+import { Container } from "@/components/Container";
 
 export const metadata = {
   title: "About Us — Flash.ai Agency",
@@ -9,7 +10,7 @@ export const metadata = {
 export default function AboutPage() {
   return (
     <div className="bg-[#fdfbf7] py-16 md:py-24">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Container>
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e5ede5] border border-[#cbdccb] text-[#3b563d] text-xs font-semibold">
@@ -88,7 +89,7 @@ export default function AboutPage() {
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
-      </div>
+      </Container>
     </div>
   );
 }

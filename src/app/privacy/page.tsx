@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ShieldCheck, ArrowLeft } from "lucide-react";
+import { Container } from "@/components/Container";
 
 export const metadata = {
   title: "Privacy Policy — Flash.ai Agency",
@@ -9,7 +10,8 @@ export const metadata = {
 export default function PrivacyPage() {
   return (
     <div className="bg-[#fdfbf7] py-16 md:py-24">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Container>
+        <div className="max-w-3xl mx-auto">
         <div className="mb-8">
           <Link
             href="/"
@@ -65,7 +67,8 @@ export default function PrivacyPage() {
             </p>
           </div>
         </div>
-      </div>
+        </div>
+      </Container>
     </div>
   );
 }

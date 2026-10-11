@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CheckCircle2, ArrowRight, ShieldCheck, HelpCircle } from "lucide-react";
+import { Container } from "@/components/Container";
 
 export const metadata = {
   title: "Investment & Scoping — Flash.ai Agency",
@@ -55,7 +56,7 @@ export default function PricingPage() {
 
   return (
     <div className="bg-[#fdfbf7] py-16 md:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Container>
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e5ede5] border border-[#cbdccb] text-[#3b563d] text-xs font-semibold">
             Transparent Investment Guidelines
@@ -146,7 +147,7 @@ export default function PricingPage() {
             Inquire About Retainers
           </Link>
         </div>
-      </div>
+      </Container>
     </div>
   );
 }

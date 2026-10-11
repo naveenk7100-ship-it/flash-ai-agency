@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Menu, X, ShieldCheck, Phone, ChevronDown, ExternalLink } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
+import { Container } from "@/components/Container";
 import { WHATSAPP_CONTACTS } from "@/lib/config";
 
 // Elegant WhatsApp SVG Icon
@@ -46,7 +47,7 @@ export function Navbar() {
           : "bg-transparent border-b border-transparent py-4 sm:py-5"
       }`}
     >
-      <div className="container-wide flex items-center justify-between">
+      <Container className="flex items-center justify-between">
         {/* Real Brand Logo */}
         <Link href="/" className="group flex items-center">
           <BrandLogo size="md" />
@@ -154,7 +155,7 @@ export function Navbar() {
         >
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
-      </div>
+      </Container>
 
       {/* Mobile Drawer */}
       {mobileOpen && (

@@ -26,6 +26,7 @@ import {
 import { AGENCY_SERVICES, AGENCY_FAQS } from "@/lib/data";
 import { db } from "@/lib/db";
 import { HeroScene3D } from "@/components/HeroScene3D";
+import { Container } from "@/components/Container";
 import { ScrollStoryController } from "@/components/ScrollStoryController";
 import { InteractiveProcessTimeline } from "@/components/InteractiveProcessTimeline";
 import { FaqAccordion } from "@/components/FaqAccordion";
@@ -60,10 +61,10 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-radial-gradient pointer-events-none opacity-50" />
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-full max-w-[640px] h-[360px] bg-gradient-to-b from-[#e5ede5]/45 via-[#cbdccb]/20 to-transparent blur-3xl pointer-events-none" />
 
-        <div className="container-wide relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-            {/* Left Column: Headline & CTAs (Col span 6 = ~50%) */}
-            <div className="lg:col-span-6 space-y-5 text-left">
+        <Container className="relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            {/* Left Column: Headline & CTAs */}
+            <div className="space-y-5 text-left">
               {/* Subtle Verified Status Pill */}
               <div className="reveal-item inline-flex flex-wrap items-center gap-1.5 sm:gap-2 px-3.5 py-1.5 rounded-full bg-[#e5ede5] border border-[#cbdccb] text-[#3b563d] text-[11px] sm:text-xs font-semibold shadow-sm max-w-full">
                 <span className="w-2 h-2 rounded-full bg-[#5f8861] animate-ping shrink-0" />
@@ -147,12 +148,12 @@ export default async function HomePage() {
               </div>
             </div>
 
-            {/* Right Column: 3D AI Automation Core & Connected Display Panels (Col span 6 = ~50%) */}
-            <div className="lg:col-span-6 flex items-center justify-center">
+            {/* Right Column: 3D AI Automation Core & Connected Display Panels */}
+            <div className="w-full flex items-center justify-center">
               <HeroScene3D />
             </div>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* ========================================================= */}
@@ -160,7 +161,7 @@ export default async function HomePage() {
       {/* ========================================================= */}
       <section id="services" className="py-20 lg:py-28 border-b border-[#e7e2d8] relative">
         <div className="absolute inset-0 tech-grid-bg opacity-30 pointer-events-none" />
-        <div className="container-wide relative z-10">
+        <Container className="relative z-10">
           <div className="reveal-item flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div className="max-w-2xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e5ede5] text-[#3b563d] text-xs font-mono font-semibold uppercase tracking-wider mb-3">
@@ -242,7 +243,7 @@ export default async function HomePage() {
               );
             })}
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* ========================================================= */}
@@ -250,7 +251,7 @@ export default async function HomePage() {
       {/* ========================================================= */}
       <section id="portfolio" className="py-20 lg:py-28 border-b border-[#e7e2d8] bg-[#f7f4ee] relative">
         <div className="absolute inset-0 tech-grid-bg opacity-25 pointer-events-none" />
-        <div className="container-wide relative z-10">
+        <Container className="relative z-10">
           <div className="reveal-item flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e5ede5] text-[#3b563d] text-xs font-mono font-semibold uppercase tracking-wider mb-3">
@@ -373,14 +374,14 @@ export default async function HomePage() {
               );
             })}
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* ========================================================= */}
       {/* 4. VERIFIED CLIENT REVIEWS                                */}
       {/* ========================================================= */}
       <section id="reviews" className="py-20 lg:py-28 border-b border-[#e7e2d8]">
-        <div className="container-wide">
+        <Container>
           <div className="reveal-item flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div>
               <span className="sage-badge mb-3">Authentic Client Testimonials</span>
@@ -426,14 +427,14 @@ export default async function HomePage() {
               );
             })}
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* ========================================================= */}
       {/* 5. IMPLEMENTATION PROCESS (Interactive Scroll Timeline)    */}
       {/* ========================================================= */}
       <section id="process" className="py-20 lg:py-28 border-b border-[#e7e2d8] bg-[#f7f4ee]">
-        <div className="container-wide">
+        <Container>
           <div className="reveal-item max-w-2xl mb-12">
             <span className="sage-badge mb-3">Rigorous 4-Stage Methodology</span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1c1917] tracking-tight mb-4">
@@ -447,14 +448,14 @@ export default async function HomePage() {
           <div className="reveal-item reveal-delay-2">
             <InteractiveProcessTimeline />
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* ========================================================= */}
       {/* 6. FAQS (Interactive Accordion)                           */}
       {/* ========================================================= */}
       <section id="faq" className="py-20 lg:py-28 border-b border-[#e7e2d8]">
-        <div className="container-wide">
+        <Container>
           <div className="max-w-3xl mx-auto">
             <div className="reveal-item text-center mb-16">
               <span className="sage-badge mb-3">Clear Answers</span>
@@ -470,7 +471,7 @@ export default async function HomePage() {
               <FaqAccordion items={AGENCY_FAQS} />
             </div>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* ========================================================= */}
@@ -483,7 +484,7 @@ export default async function HomePage() {
         {/* Atmospheric Metallic-Sage Core Glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[360px] bg-gradient-to-r from-[#3b563d]/30 via-[#5f8861]/25 to-[#3b563d]/30 blur-[100px] rounded-full pointer-events-none" />
 
-        <div className="container-wide relative z-10">
+        <Container className="relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <div className="reveal-item">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1b2b1e] border border-[#5f8861]/40 text-[#86c289] text-xs font-mono font-semibold uppercase tracking-wider mb-6 shadow-[0_0_15px_rgba(95,136,97,0.2)]">
@@ -561,7 +562,7 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
-        </div>
+        </Container>
       </section>
     </div>
   );

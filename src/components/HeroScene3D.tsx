@@ -890,7 +890,7 @@ export function HeroScene3D() {
   }, []);
 
   return (
-    <div className="relative w-full max-w-[580px] lg:max-w-[650px] aspect-[4/3] sm:aspect-square mx-auto flex items-center justify-center select-none overflow-visible">
+    <div className="relative w-full max-w-[580px] lg:max-w-[700px] aspect-[4/3] sm:aspect-square mx-auto flex items-center justify-center select-none overflow-visible">
       {/* Ambient Warm Sage Halo Behind 3D Workflow Ecosystem */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none -z-10">
         <div className="w-80 h-80 sm:w-[460px] sm:h-[460px] rounded-full bg-[#cbdccb]/40 blur-3xl animate-pulse-halo" />

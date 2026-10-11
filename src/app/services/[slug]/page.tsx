@@ -19,6 +19,7 @@ import {
   MessageSquare
 } from "lucide-react";
 import { WHATSAPP_CONTACTS } from "@/lib/config";
+import { Container } from "@/components/Container";
 
 const ICON_MAP: Record<string, any> = {
   Workflow,
@@ -61,7 +62,7 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
 
   return (
     <div className="bg-[#fdfbf7] py-16 md:py-24">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Container>
         {/* Back navigation */}
         <div className="mb-8">
           <Link
@@ -276,7 +277,7 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
             </a>
           </div>
         </div>
-      </div>
+      </Container>
     </div>
   );
 }
