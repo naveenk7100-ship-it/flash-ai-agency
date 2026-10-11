@@ -2,6 +2,27 @@
  * FLASH.Ai Agency - Full Production, Security, Privacy & Data Layer Verification Script
  */
 
+const fs = require("fs");
+const path = require("path");
+
+// Load .env.local if present
+const envLocalPath = path.join(__dirname, "..", ".env.local");
+if (fs.existsSync(envLocalPath)) {
+  const content = fs.readFileSync(envLocalPath, "utf8");
+  content.split("\n").forEach((line) => {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) return;
+    const eqIdx = trimmed.indexOf("=");
+    if (eqIdx > 0) {
+      const key = trimmed.substring(0, eqIdx).trim();
+      const val = trimmed.substring(eqIdx + 1).trim().replace(/^["']|["']$/g, "");
+      if (!process.env[key]) {
+        process.env[key] = val;
+      }
+    }
+  });
+}
+
 const BASE_URL = "http://localhost:3001";
 const hasDbConfigured = Boolean(
   process.env.DATABASE_URL ||
@@ -323,7 +344,23 @@ async function runTests() {
 
     if (hasDbConfigured && createdBookingId) {
       const bookingLead = data.leads.find((l) => l.email === testBookingEmail);
-      assert(Boolean(bookingLead), `Verified new booking lead exists in CRM`);
+      assert(Boolean(bookingLead), `Verified new booking lead (${testBookingEmail}) saved & retrieved from Neon PostgreSQL`);
+
+      // Test updating lead status via CRM PATCH API
+      const patchRes = await fetch(`${BASE_URL}/api/leads`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: sessionCookie || ""
+        },
+        body: JSON.stringify({
+          id: createdBookingId,
+          status: "Contacted",
+          notes: "Neon live update verified."
+        })
+      });
+      const patchData = await patchRes.json();
+      assert(patchRes.ok && patchData.success, "PATCH /api/leads successfully updates lead status in PostgreSQL");
     } else {
       assert(true, "CRM pipeline operational; live writes verified guarded until DATABASE_URL is configured");
     }

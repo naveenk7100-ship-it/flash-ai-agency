@@ -77,80 +77,13 @@ async function runAudit() {
 
   // 2. Schema check / ensure tables exist
   try {
-    await sql`
-      CREATE TABLE IF NOT EXISTS schema_migrations (
-        version VARCHAR(64) PRIMARY KEY,
-        applied_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        description TEXT
-      );
-      CREATE TABLE IF NOT EXISTS leads (
-        id VARCHAR(64) PRIMARY KEY,
-        type VARCHAR(32) NOT NULL DEFAULT 'booking',
-        name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
-        phone VARCHAR(64) DEFAULT '',
-        service VARCHAR(255) NOT NULL,
-        message TEXT NOT NULL,
-        company VARCHAR(255),
-        budget VARCHAR(128),
-        preferred_date VARCHAR(64),
-        status VARCHAR(64) NOT NULL DEFAULT 'New',
-        notes TEXT,
-        source VARCHAR(128),
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      );
-      CREATE TABLE IF NOT EXISTS bookings (
-        id VARCHAR(64) PRIMARY KEY,
-        full_name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
-        phone VARCHAR(64),
-        company VARCHAR(255),
-        website VARCHAR(255),
-        service_id VARCHAR(128) NOT NULL,
-        preferred_date VARCHAR(64) NOT NULL,
-        preferred_time VARCHAR(64) NOT NULL,
-        timezone VARCHAR(64),
-        budget_range VARCHAR(128) NOT NULL,
-        project_brief TEXT NOT NULL,
-        reference_links TEXT,
-        status VARCHAR(64) NOT NULL DEFAULT 'New',
-        notes TEXT,
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      );
-      CREATE TABLE IF NOT EXISTS contact_submissions (
-        id VARCHAR(64) PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
-        phone VARCHAR(64),
-        subject VARCHAR(255) NOT NULL,
-        message TEXT NOT NULL,
-        source VARCHAR(128) DEFAULT 'Contact Page',
-        status VARCHAR(64) NOT NULL DEFAULT 'unread',
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      );
-      CREATE TABLE IF NOT EXISTS admin_settings (
-        key VARCHAR(128) PRIMARY KEY,
-        value TEXT NOT NULL,
-        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      );
-      CREATE TABLE IF NOT EXISTS customer_reviews (
-        id VARCHAR(64) PRIMARY KEY,
-        reviewer_name VARCHAR(255) NOT NULL,
-        company VARCHAR(255) NOT NULL,
-        role VARCHAR(128),
-        rating INTEGER NOT NULL DEFAULT 5,
-        review_text TEXT NOT NULL,
-        status VARCHAR(32) NOT NULL DEFAULT 'approved',
-        date VARCHAR(64) NOT NULL,
-        verified_client BOOLEAN NOT NULL DEFAULT true,
-        service_id VARCHAR(128),
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-      );
+    const tableRows = await sql`
+      SELECT table_name FROM information_schema.tables
+      WHERE table_schema = 'public' AND table_name IN ('leads', 'bookings', 'contact_submissions', 'admin_settings', 'customer_reviews');
     `;
-    assert(true, "PostgreSQL schema validation (leads, bookings, contact_submissions, admin_settings, customer_reviews)");
+    const foundTables = tableRows.map((r) => r.table_name);
+    const hasAll = ['leads', 'bookings', 'contact_submissions', 'admin_settings', 'customer_reviews'].every((t) => foundTables.includes(t));
+    assert(hasAll, `PostgreSQL schema validation (verified tables: ${foundTables.join(', ')})`);
   } catch (err) {
     assert(false, "PostgreSQL schema validation", err.message);
   }
