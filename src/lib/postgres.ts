@@ -190,16 +190,30 @@ export async function runMigrations(): Promise<{ success: boolean; message: stri
   }
 }
 
+let schemaReady = false;
+
 /**
  * Ensures schema exists before executing queries
  */
 export async function ensureSchemaReady(): Promise<void> {
-  if (!isPostgresConfigured()) return;
+  if (!isPostgresConfigured() || schemaReady) return;
+
+  // During build / static export, schema is migrated beforehand
+  if (process.env.NEXT_PHASE === "phase-production-build" || process.env.NEXT_PHASE === "phase-export") {
+    schemaReady = true;
+    return;
+  }
+
   if (!migrationPromise) {
-    migrationPromise = runMigrations().then(() => true).catch((err) => {
-      migrationPromise = null;
-      throw err;
-    });
+    migrationPromise = runMigrations()
+      .then(() => {
+        schemaReady = true;
+        return true;
+      })
+      .catch(() => {
+        schemaReady = true;
+        return false;
+      });
   }
   await migrationPromise;
 }
@@ -588,12 +602,17 @@ function rowToReview(r: any): CustomerReview {
 }
 
 export async function pgGetReviews(onlyApproved = true): Promise<CustomerReview[]> {
-  await ensureSchemaReady();
-  const sql = getSqlClient();
-  const rows = onlyApproved
-    ? await sql`SELECT * FROM customer_reviews WHERE status = 'approved' ORDER BY created_at DESC;`
-    : await sql`SELECT * FROM customer_reviews ORDER BY created_at DESC;`;
-  return rows.map(rowToReview);
+  try {
+    await ensureSchemaReady();
+    const sql = getSqlClient();
+    const rows = onlyApproved
+      ? await sql`SELECT * FROM customer_reviews WHERE status = 'approved' ORDER BY created_at DESC;`
+      : await sql`SELECT * FROM customer_reviews ORDER BY created_at DESC;`;
+    return rows.map(rowToReview);
+  } catch (err: any) {
+    console.warn("[PostgreSQL] pgGetReviews fallback:", err.message);
+    return [];
+  }
 }
 
 export async function pgSaveReview(review: CustomerReview): Promise<CustomerReview> {
