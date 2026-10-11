@@ -29,9 +29,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark scroll-smooth">
-      <body className={`${inter.className} min-h-screen flex flex-col bg-[#050508] text-zinc-100 antialiased`}>
+      <body
+        className={`${inter.className} min-h-screen flex flex-col bg-[#020106] text-zinc-100 antialiased selection:bg-[#863bff] selection:text-white`}
+      >
         <Navbar />
-        <main className="flex-grow">{children}</main>
+        {/* Main page content container */}
+        <main className="flex-grow pt-20">{children}</main>
         <Footer />
       </body>
     </html>
