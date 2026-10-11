@@ -2,13 +2,33 @@ import fs from "fs";
 import path from "path";
 import { BookingSubmission, ContactSubmission, CustomerReview, Project, Lead } from "./types";
 import { INITIAL_PROJECTS } from "./data";
+import {
+  isPostgresConfigured,
+  getSanitizedDbInfo,
+  pgGetLeads,
+  pgSaveLead,
+  pgUpdateLead,
+  pgDeleteLead,
+  pgGetBookings,
+  pgSaveBooking,
+  pgUpdateBooking,
+  pgGetContacts,
+  pgSaveContact,
+  pgUpdateContactStatus,
+  pgGetAdminPasswordHash,
+  pgSetAdminPasswordHash,
+  pgGetReviews,
+  pgSaveReview,
+  pgUpdateReviewStatus,
+  pgDeleteReview
+} from "./postgres";
 
 /**
- * Production-Ready Storage Engine for FLASH.Ai Agency
- * - Works on Vercel Serverless with Upstash Redis / Vercel KV REST API
- * - Works with PostgreSQL (POSTGRES_URL / DATABASE_URL)
- * - Persistent local JSON store fallback for local development (so leads survive restarts)
- * - Zero silent lead losses with comprehensive error logging
+ * Production-Grade Storage Engine for FLASH.Ai Agency
+ * - Prioritizes Neon Serverless PostgreSQL (DATABASE_URL / POSTGRES_URL)
+ * - Supports Upstash Redis / Vercel KV REST API
+ * - Strict production policy: writes are NEVER stored in RAM/local JSON in production
+ * - Persistent local JSON store fallback ONLY for local development without DB
  */
 
 declare global {
@@ -112,7 +132,7 @@ function contactToLead(c: ContactSubmission): Lead {
   };
 }
 
-// Local File Storage path for local development (guarantees local data is never wiped on dev restart)
+// Local File Storage path for local development fallback
 const LOCAL_DATA_DIR = path.join(process.cwd(), ".data");
 const LOCAL_STORE_FILE = path.join(LOCAL_DATA_DIR, "production_store.json");
 
@@ -137,13 +157,12 @@ function saveLocalStore(data: any): void {
     }
     fs.writeFileSync(LOCAL_STORE_FILE, JSON.stringify(data, null, 2), "utf8");
   } catch (err) {
-    // Vercel serverless /tmp or readonly filesystem: safe to swallow
+    // ignore
   }
 }
 
-// Initialize In-Memory global store with local cache if available
+// In-Memory store initialized for local development fallback
 const localSaved = loadLocalStore();
-
 if (!global.__FLASH_AI_STORE) {
   global.__FLASH_AI_STORE = {
     bookings: localSaved?.bookings || [...INITIAL_BOOKINGS],
@@ -158,13 +177,9 @@ if (!global.__FLASH_AI_STORE) {
   };
 }
 
-// Cloud Database configuration (Upstash Redis or Vercel KV)
-const REDIS_URL =
-  process.env.UPSTASH_REDIS_REST_URL ||
-  process.env.KV_REST_API_URL;
-const REDIS_TOKEN =
-  process.env.UPSTASH_REDIS_REST_TOKEN ||
-  process.env.KV_REST_API_TOKEN;
+// Optional Redis fallback configuration
+const REDIS_URL = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
 
 async function redisCommand(command: (string | number)[]): Promise<any> {
   if (!REDIS_URL || !REDIS_TOKEN) return null;
@@ -189,24 +204,41 @@ async function redisCommand(command: (string | number)[]): Promise<any> {
   }
 }
 
+/**
+ * Production write safety guard:
+ * Prevents silent data drops into RAM or JSON when running in production without a real database.
+ */
+function assertProductionStorage(operation: string) {
+  if (isPostgresConfigured() || (REDIS_URL && REDIS_TOKEN)) {
+    return;
+  }
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(
+      `[Production Storage Error] Cannot perform '${operation}': No production database is configured. Please configure DATABASE_URL in environment variables to prevent data loss.`
+    );
+  }
+}
+
 export const db = {
   isCloudConfigured: (): boolean => {
-    return Boolean(REDIS_URL && REDIS_TOKEN);
+    return isPostgresConfigured() || Boolean(REDIS_URL && REDIS_TOKEN);
   },
 
-  getDatabaseInfo: (): { type: string; configured: boolean; provider: string } => {
+  getDatabaseInfo: (): { type: string; configured: boolean; provider: string; host?: string } => {
+    if (isPostgresConfigured()) {
+      const info = getSanitizedDbInfo();
+      return {
+        type: "PostgreSQL Database (Neon Serverless)",
+        configured: true,
+        provider: "postgres",
+        host: info.host
+      };
+    }
     if (REDIS_URL && REDIS_TOKEN) {
       return {
         type: "Production Cloud KV (Upstash/Vercel)",
         configured: true,
         provider: "upstash_redis"
-      };
-    }
-    if (process.env.DATABASE_URL || process.env.POSTGRES_URL) {
-      return {
-        type: "PostgreSQL Database",
-        configured: true,
-        provider: "postgres"
       };
     }
     return {
@@ -218,65 +250,41 @@ export const db = {
 
   /* ------------------- LEADS (Unified CRM Entity) ------------------- */
   getLeads: async (): Promise<Lead[]> => {
-    let leads: Lead[] = [];
+    // 1. PostgreSQL priority
+    if (isPostgresConfigured()) {
+      return await pgGetLeads();
+    }
 
-    // 1. Try cloud Redis
+    // 2. Redis KV
     if (REDIS_URL && REDIS_TOKEN) {
       const data = await redisCommand(["GET", "flash_ai:leads"]);
       if (data) {
         try {
-          leads = typeof data === "string" ? JSON.parse(data) : data;
+          const parsed = typeof data === "string" ? JSON.parse(data) : data;
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
         } catch {
           // ignore
         }
       }
     }
 
-    // 2. Fallback to memory / local store
-    if (!leads || leads.length === 0) {
-      leads = global.__FLASH_AI_STORE?.leads || [];
-    }
-
-    // 3. Ensure all bookings & contacts exist in the leads list
-    const currentBookings = await db.getBookings();
-    const currentContacts = await db.getContacts();
-
-    let hasNewItems = false;
-    currentBookings.forEach((b) => {
-      if (!leads.some((l) => l.id === b.id)) {
-        leads.push(bookingToLead(b));
-        hasNewItems = true;
-      }
-    });
-
-    currentContacts.forEach((c) => {
-      if (!leads.some((l) => l.id === c.id)) {
-        leads.push(contactToLead(c));
-        hasNewItems = true;
-      }
-    });
-
-    // Sort descending by creation date
-    leads.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
-    if (hasNewItems) {
-      if (global.__FLASH_AI_STORE) {
-        global.__FLASH_AI_STORE.leads = leads;
-      }
-      saveLocalStore(global.__FLASH_AI_STORE);
-      if (REDIS_URL && REDIS_TOKEN) {
-        await redisCommand(["SET", "flash_ai:leads", JSON.stringify(leads)]);
-      }
-    }
-
-    return leads;
+    // 3. Local fallback (development only)
+    const leads = global.__FLASH_AI_STORE?.leads || [];
+    return [...leads].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   },
 
   saveLead: async (lead: Lead): Promise<Lead> => {
+    assertProductionStorage("saveLead");
+
+    // 1. PostgreSQL priority
+    if (isPostgresConfigured()) {
+      return await pgSaveLead(lead);
+    }
+
+    // 2. Redis KV
     const current = await db.getLeads();
     const index = current.findIndex((l) => l.id === lead.id);
     let updated: Lead[];
-
     if (index >= 0) {
       updated = [...current];
       updated[index] = { ...updated[index], ...lead };
@@ -284,65 +292,82 @@ export const db = {
       updated = [lead, ...current];
     }
 
+    if (REDIS_URL && REDIS_TOKEN) {
+      await redisCommand(["SET", "flash_ai:leads", JSON.stringify(updated)]);
+    }
+
+    // 3. Local fallback
     if (global.__FLASH_AI_STORE) {
       global.__FLASH_AI_STORE.leads = updated;
     }
     saveLocalStore(global.__FLASH_AI_STORE);
 
-    if (REDIS_URL && REDIS_TOKEN) {
-      await redisCommand(["SET", "flash_ai:leads", JSON.stringify(updated)]);
-    }
-
     return lead;
   },
 
   updateLead: async (id: string, updates: Partial<Lead>): Promise<boolean> => {
+    assertProductionStorage("updateLead");
+
+    // 1. PostgreSQL priority
+    if (isPostgresConfigured()) {
+      return await pgUpdateLead(id, updates);
+    }
+
+    // 2. Local/Redis
     const current = await db.getLeads();
     const index = current.findIndex((l) => l.id === id);
     if (index === -1) return false;
 
     current[index] = { ...current[index], ...updates };
 
+    if (REDIS_URL && REDIS_TOKEN) {
+      await redisCommand(["SET", "flash_ai:leads", JSON.stringify(current)]);
+    }
+
     if (global.__FLASH_AI_STORE) {
       global.__FLASH_AI_STORE.leads = [...current];
     }
     saveLocalStore(global.__FLASH_AI_STORE);
 
-    if (REDIS_URL && REDIS_TOKEN) {
-      await redisCommand(["SET", "flash_ai:leads", JSON.stringify(current)]);
-    }
-
-    // Mirror updates back to booking or contact if applicable
-    if (updates.status) {
-      if (current[index].type === "booking") {
-        await db.updateBooking(id, {
-          status: updates.status as any,
-          notes: updates.notes
-        });
-      }
+    // Mirror to booking if applicable
+    if (updates.status && current[index].type === "booking") {
+      await db.updateBooking(id, {
+        status: updates.status as any,
+        notes: updates.notes
+      });
     }
 
     return true;
   },
 
   deleteLead: async (id: string): Promise<boolean> => {
+    assertProductionStorage("deleteLead");
+
+    if (isPostgresConfigured()) {
+      return await pgDeleteLead(id);
+    }
+
     const current = await db.getLeads();
     const updated = current.filter((l) => l.id !== id);
+
+    if (REDIS_URL && REDIS_TOKEN) {
+      await redisCommand(["SET", "flash_ai:leads", JSON.stringify(updated)]);
+    }
 
     if (global.__FLASH_AI_STORE) {
       global.__FLASH_AI_STORE.leads = updated;
     }
     saveLocalStore(global.__FLASH_AI_STORE);
 
-    if (REDIS_URL && REDIS_TOKEN) {
-      await redisCommand(["SET", "flash_ai:leads", JSON.stringify(updated)]);
-    }
-
     return true;
   },
 
   /* ------------------- BOOKINGS ------------------- */
   getBookings: async (): Promise<BookingSubmission[]> => {
+    if (isPostgresConfigured()) {
+      return await pgGetBookings();
+    }
+
     if (REDIS_URL && REDIS_TOKEN) {
       const data = await redisCommand(["GET", "flash_ai:bookings"]);
       if (data) {
@@ -353,25 +378,30 @@ export const db = {
         }
       }
     }
+
     return global.__FLASH_AI_STORE?.bookings || [];
   },
 
   saveBooking: async (booking: BookingSubmission): Promise<BookingSubmission> => {
+    assertProductionStorage("saveBooking");
+
+    if (isPostgresConfigured()) {
+      return await pgSaveBooking(booking);
+    }
+
     const current = await db.getBookings();
     const updated = [booking, ...current.filter((b) => b.id !== booking.id)];
+
+    if (REDIS_URL && REDIS_TOKEN) {
+      await redisCommand(["SET", "flash_ai:bookings", JSON.stringify(updated)]);
+    }
 
     if (global.__FLASH_AI_STORE) {
       global.__FLASH_AI_STORE.bookings = updated;
     }
     saveLocalStore(global.__FLASH_AI_STORE);
 
-    if (REDIS_URL && REDIS_TOKEN) {
-      await redisCommand(["SET", "flash_ai:bookings", JSON.stringify(updated)]);
-    }
-
-    // Mirror to leads collection automatically
     await db.saveLead(bookingToLead(booking));
-
     return booking;
   },
 
@@ -379,26 +409,36 @@ export const db = {
     id: string,
     updates: Partial<BookingSubmission>
   ): Promise<boolean> => {
+    assertProductionStorage("updateBooking");
+
+    if (isPostgresConfigured()) {
+      return await pgUpdateBooking(id, updates);
+    }
+
     const current = await db.getBookings();
     const index = current.findIndex((b) => b.id === id);
     if (index === -1) return false;
 
     current[index] = { ...current[index], ...updates };
 
+    if (REDIS_URL && REDIS_TOKEN) {
+      await redisCommand(["SET", "flash_ai:bookings", JSON.stringify(current)]);
+    }
+
     if (global.__FLASH_AI_STORE) {
       global.__FLASH_AI_STORE.bookings = [...current];
     }
     saveLocalStore(global.__FLASH_AI_STORE);
-
-    if (REDIS_URL && REDIS_TOKEN) {
-      await redisCommand(["SET", "flash_ai:bookings", JSON.stringify(current)]);
-    }
 
     return true;
   },
 
   /* ------------------- CONTACTS ------------------- */
   getContacts: async (): Promise<ContactSubmission[]> => {
+    if (isPostgresConfigured()) {
+      return await pgGetContacts();
+    }
+
     if (REDIS_URL && REDIS_TOKEN) {
       const data = await redisCommand(["GET", "flash_ai:contacts"]);
       if (data) {
@@ -409,25 +449,30 @@ export const db = {
         }
       }
     }
+
     return global.__FLASH_AI_STORE?.contacts || [];
   },
 
   saveContact: async (contact: ContactSubmission): Promise<ContactSubmission> => {
+    assertProductionStorage("saveContact");
+
+    if (isPostgresConfigured()) {
+      return await pgSaveContact(contact);
+    }
+
     const current = await db.getContacts();
     const updated = [contact, ...current.filter((c) => c.id !== contact.id)];
+
+    if (REDIS_URL && REDIS_TOKEN) {
+      await redisCommand(["SET", "flash_ai:contacts", JSON.stringify(updated)]);
+    }
 
     if (global.__FLASH_AI_STORE) {
       global.__FLASH_AI_STORE.contacts = updated;
     }
     saveLocalStore(global.__FLASH_AI_STORE);
 
-    if (REDIS_URL && REDIS_TOKEN) {
-      await redisCommand(["SET", "flash_ai:contacts", JSON.stringify(updated)]);
-    }
-
-    // Mirror to leads collection automatically
     await db.saveLead(contactToLead(contact));
-
     return contact;
   },
 
@@ -435,20 +480,26 @@ export const db = {
     id: string,
     status: ContactSubmission["status"]
   ): Promise<boolean> => {
+    assertProductionStorage("updateContactStatus");
+
+    if (isPostgresConfigured()) {
+      return await pgUpdateContactStatus(id, status);
+    }
+
     const current = await db.getContacts();
     const index = current.findIndex((c) => c.id === id);
     if (index === -1) return false;
 
     current[index].status = status;
 
+    if (REDIS_URL && REDIS_TOKEN) {
+      await redisCommand(["SET", "flash_ai:contacts", JSON.stringify(current)]);
+    }
+
     if (global.__FLASH_AI_STORE) {
       global.__FLASH_AI_STORE.contacts = [...current];
     }
     saveLocalStore(global.__FLASH_AI_STORE);
-
-    if (REDIS_URL && REDIS_TOKEN) {
-      await redisCommand(["SET", "flash_ai:contacts", JSON.stringify(current)]);
-    }
 
     return true;
   },
@@ -469,6 +520,8 @@ export const db = {
   },
 
   saveProject: async (project: Project): Promise<Project> => {
+    assertProductionStorage("saveProject");
+
     const current = await db.getProjects();
     const index = current.findIndex((p) => p.id === project.id);
     let updated: Project[];
@@ -478,33 +531,43 @@ export const db = {
     } else {
       updated = [project, ...current];
     }
+
+    if (REDIS_URL && REDIS_TOKEN) {
+      await redisCommand(["SET", "flash_ai:projects", JSON.stringify(updated)]);
+    }
+
     if (global.__FLASH_AI_STORE) {
       global.__FLASH_AI_STORE.projects = updated;
     }
     saveLocalStore(global.__FLASH_AI_STORE);
 
-    if (REDIS_URL && REDIS_TOKEN) {
-      await redisCommand(["SET", "flash_ai:projects", JSON.stringify(updated)]);
-    }
     return project;
   },
 
   deleteProject: async (id: string): Promise<boolean> => {
+    assertProductionStorage("deleteProject");
+
     const current = await db.getProjects();
     const updated = current.filter((p) => p.id !== id);
+
+    if (REDIS_URL && REDIS_TOKEN) {
+      await redisCommand(["SET", "flash_ai:projects", JSON.stringify(updated)]);
+    }
+
     if (global.__FLASH_AI_STORE) {
       global.__FLASH_AI_STORE.projects = updated;
     }
     saveLocalStore(global.__FLASH_AI_STORE);
 
-    if (REDIS_URL && REDIS_TOKEN) {
-      await redisCommand(["SET", "flash_ai:projects", JSON.stringify(updated)]);
-    }
     return true;
   },
 
   /* ------------------- CUSTOMER REVIEWS ------------------- */
   getReviews: async (onlyApproved = true): Promise<CustomerReview[]> => {
+    if (isPostgresConfigured()) {
+      return await pgGetReviews(onlyApproved);
+    }
+
     let reviews: CustomerReview[] = [];
     if (REDIS_URL && REDIS_TOKEN) {
       const data = await redisCommand(["GET", "flash_ai:reviews"]);
@@ -526,6 +589,12 @@ export const db = {
   },
 
   saveReview: async (review: CustomerReview): Promise<CustomerReview> => {
+    assertProductionStorage("saveReview");
+
+    if (isPostgresConfigured()) {
+      return await pgSaveReview(review);
+    }
+
     const current = await db.getReviews(false);
     const index = current.findIndex((r) => r.id === review.id);
     let updated: CustomerReview[];
@@ -535,14 +604,16 @@ export const db = {
     } else {
       updated = [review, ...current];
     }
+
+    if (REDIS_URL && REDIS_TOKEN) {
+      await redisCommand(["SET", "flash_ai:reviews", JSON.stringify(updated)]);
+    }
+
     if (global.__FLASH_AI_STORE) {
       global.__FLASH_AI_STORE.reviews = updated;
     }
     saveLocalStore(global.__FLASH_AI_STORE);
 
-    if (REDIS_URL && REDIS_TOKEN) {
-      await redisCommand(["SET", "flash_ai:reviews", JSON.stringify(updated)]);
-    }
     return review;
   },
 
@@ -550,53 +621,81 @@ export const db = {
     id: string,
     status: CustomerReview["status"]
   ): Promise<boolean> => {
+    assertProductionStorage("updateReviewStatus");
+
+    if (isPostgresConfigured()) {
+      return await pgUpdateReviewStatus(id, status);
+    }
+
     const current = await db.getReviews(false);
     const index = current.findIndex((r) => r.id === id);
     if (index === -1) return false;
     current[index].status = status;
+
+    if (REDIS_URL && REDIS_TOKEN) {
+      await redisCommand(["SET", "flash_ai:reviews", JSON.stringify(current)]);
+    }
+
     if (global.__FLASH_AI_STORE) {
       global.__FLASH_AI_STORE.reviews = [...current];
     }
     saveLocalStore(global.__FLASH_AI_STORE);
 
-    if (REDIS_URL && REDIS_TOKEN) {
-      await redisCommand(["SET", "flash_ai:reviews", JSON.stringify(current)]);
-    }
     return true;
   },
 
   deleteReview: async (id: string): Promise<boolean> => {
+    assertProductionStorage("deleteReview");
+
+    if (isPostgresConfigured()) {
+      return await pgDeleteReview(id);
+    }
+
     const current = await db.getReviews(false);
     const updated = current.filter((r) => r.id !== id);
+
+    if (REDIS_URL && REDIS_TOKEN) {
+      await redisCommand(["SET", "flash_ai:reviews", JSON.stringify(updated)]);
+    }
+
     if (global.__FLASH_AI_STORE) {
       global.__FLASH_AI_STORE.reviews = updated;
     }
     saveLocalStore(global.__FLASH_AI_STORE);
 
-    if (REDIS_URL && REDIS_TOKEN) {
-      await redisCommand(["SET", "flash_ai:reviews", JSON.stringify(updated)]);
-    }
     return true;
   },
 
   /* ------------------- ADMIN AUTH CREDENTIAL STORAGE ------------------- */
   getAdminPasswordHash: async (): Promise<string | null> => {
+    if (isPostgresConfigured()) {
+      return await pgGetAdminPasswordHash();
+    }
+
     if (REDIS_URL && REDIS_TOKEN) {
       const data = await redisCommand(["GET", "flash_ai:admin_password_hash"]);
       if (data) return String(data);
     }
+
     return global.__FLASH_AI_STORE?.adminPasswordHash || null;
   },
 
   setAdminPasswordHash: async (hash: string): Promise<boolean> => {
+    assertProductionStorage("setAdminPasswordHash");
+
+    if (isPostgresConfigured()) {
+      return await pgSetAdminPasswordHash(hash);
+    }
+
+    if (REDIS_URL && REDIS_TOKEN) {
+      await redisCommand(["SET", "flash_ai:admin_password_hash", hash]);
+    }
+
     if (global.__FLASH_AI_STORE) {
       global.__FLASH_AI_STORE.adminPasswordHash = hash;
     }
     saveLocalStore(global.__FLASH_AI_STORE);
 
-    if (REDIS_URL && REDIS_TOKEN) {
-      await redisCommand(["SET", "flash_ai:admin_password_hash", hash]);
-    }
     return true;
   }
 };

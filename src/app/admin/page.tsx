@@ -59,7 +59,7 @@ function AdminDashboardContent() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [bookings, setBookings] = useState<BookingSubmission[]>([]);
   const [contacts, setContacts] = useState<ContactSubmission[]>([]);
-  const [dbInfo, setDbInfo] = useState<{ type: string; configured: boolean; provider: string } | null>(null);
+  const [dbInfo, setDbInfo] = useState<{ type: string; configured: boolean; provider: string; host?: string } | null>(null);
   const [loadingData, setLoadingData] = useState(false);
   const [actionMessage, setActionMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -1094,9 +1094,11 @@ function AdminDashboardContent() {
                     <span>{dbInfo?.type || "Local Persistent Engine"}</span>
                   </div>
                   <p className="text-xs text-[#6E685F] mt-1">
-                    {dbInfo?.configured
-                      ? "Zero cold-start cloud persistence via Upstash Redis REST API. All leads and bookings persist across serverless instances."
-                      : "Using local filesystem JSON storage. Survives restarts locally. For Vercel production, configure UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN."}
+                    {dbInfo?.provider === "postgres"
+                      ? `Neon Serverless PostgreSQL active${dbInfo?.host ? ` (${dbInfo.host})` : ""}. All leads, bookings, contact inquiries, and credentials persist in relational tables.`
+                      : dbInfo?.configured
+                      ? "Cloud persistence active via Upstash Redis REST API. All leads and bookings persist across serverless instances."
+                      : "Using local filesystem JSON storage. Survives restarts locally. For production, configure DATABASE_URL in Vercel environment variables."}
                   </p>
                 </div>
 
