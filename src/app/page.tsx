@@ -55,15 +55,15 @@ export default async function HomePage() {
       {/* ========================================================= */}
       {/* 1. CINEMATIC 3D HERO SECTION                              */}
       {/* ========================================================= */}
-      <section className="relative pt-6 pb-20 lg:pt-14 lg:pb-28 border-b border-[#e7e2d8] overflow-hidden">
+      <section className="relative pt-4 pb-14 lg:pt-8 lg:pb-20 border-b border-[#e7e2d8] overflow-hidden">
         {/* Subtle Ambient Studio Glows */}
         <div className="absolute inset-0 bg-radial-gradient pointer-events-none opacity-50" />
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-full max-w-[640px] h-[360px] bg-gradient-to-b from-[#e5ede5]/45 via-[#cbdccb]/20 to-transparent blur-3xl pointer-events-none" />
 
         <div className="container-wide relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-            {/* Left Column: Headline & CTAs (Col span 7 = ~58%) */}
-            <div className="lg:col-span-7 space-y-6 text-left">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+            {/* Left Column: Headline & CTAs (Col span 6 = ~50%) */}
+            <div className="lg:col-span-6 space-y-5 text-left">
               {/* Subtle Verified Status Pill */}
               <div className="reveal-item inline-flex flex-wrap items-center gap-1.5 sm:gap-2 px-3.5 py-1.5 rounded-full bg-[#e5ede5] border border-[#cbdccb] text-[#3b563d] text-[11px] sm:text-xs font-semibold shadow-sm max-w-full">
                 <span className="w-2 h-2 rounded-full bg-[#5f8861] animate-ping shrink-0" />
@@ -73,7 +73,7 @@ export default async function HomePage() {
               </div>
 
               {/* Redesigned Headline */}
-              <h1 className="reveal-item reveal-delay-1 text-[clamp(1.75rem,5.5vw,4.15rem)] font-extrabold text-[#1c1917] tracking-tight leading-[1.1] break-normal">
+              <h1 className="reveal-item reveal-delay-1 text-[clamp(2.1rem,4.8vw,3.95rem)] font-extrabold text-[#1c1917] tracking-tight leading-[1.08] break-normal">
                 We Turn AI Into Your Unfair Advantage.
               </h1>
 
@@ -83,10 +83,10 @@ export default async function HomePage() {
               </p>
 
               {/* Primary & Secondary CTAs */}
-              <div className="reveal-item reveal-delay-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
+              <div className="reveal-item reveal-delay-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
                 <Link
                   href="/booking"
-                  className="btn-sage-primary text-sm py-3.5 px-8 flex items-center justify-center gap-2"
+                  className="btn-sage-primary text-sm py-3 px-7 flex items-center justify-center gap-2"
                 >
                   Build Your AI Workflow
                   <ArrowRight className="w-4 h-4" />
@@ -94,7 +94,7 @@ export default async function HomePage() {
 
                 <Link
                   href="/portfolio"
-                  className="btn-sage-secondary text-sm py-3.5 px-8 flex items-center justify-center gap-2"
+                  className="btn-sage-secondary text-sm py-3 px-7 flex items-center justify-center gap-2"
                 >
                   Explore Our Work
                 </Link>
@@ -102,15 +102,15 @@ export default async function HomePage() {
 
               {/* Instant WhatsApp Quick Contacts */}
               <div className="reveal-item reveal-delay-3 flex flex-wrap items-center gap-2 pt-1 text-xs">
-                <span className="text-[#78716c] font-medium text-[11px] flex items-center gap-1.5 shrink-0">
+                <span className="text-[#57534e] font-medium text-[11px] flex items-center gap-1.5 shrink-0">
                   <MessageSquare className="w-3.5 h-3.5 text-[#25D366]" />
-                  WhatsApp Direct:
+                  Direct WhatsApp:
                 </span>
                 <a
                   href={WHATSAPP_CONTACTS.line1.chatUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#ffffff] border border-[#cbdccb] text-[#293a2b] hover:border-[#25D366] hover:bg-[#e5ede5] transition-colors font-mono text-[11px] font-semibold shadow-sm"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#ffffff] border border-[#cbdccb] text-[#293a2b] hover:border-[#25D366] hover:bg-[#e5ede5] transition-colors font-mono text-[11px] font-semibold shadow-xs"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#25D366]" />
                   Line 1: {WHATSAPP_CONTACTS.line1.display}
@@ -119,7 +119,7 @@ export default async function HomePage() {
                   href={WHATSAPP_CONTACTS.line2.chatUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#ffffff] border border-[#cbdccb] text-[#293a2b] hover:border-[#25D366] hover:bg-[#e5ede5] transition-colors font-mono text-[11px] font-semibold shadow-sm"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#ffffff] border border-[#cbdccb] text-[#293a2b] hover:border-[#25D366] hover:bg-[#e5ede5] transition-colors font-mono text-[11px] font-semibold shadow-xs"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#25D366]" />
                   Line 2: {WHATSAPP_CONTACTS.line2.display}
@@ -127,7 +127,7 @@ export default async function HomePage() {
               </div>
 
               {/* Trust Metric Strip */}
-              <div className="reveal-item reveal-delay-4 pt-6 border-t border-[#e7e2d8] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 text-xs">
+              <div className="reveal-item reveal-delay-4 pt-5 border-t border-[#e7e2d8] grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                 <div>
                   <span className="text-[#78716c] block text-[11px] font-medium">Architecture</span>
                   <span className="font-semibold text-[#1c1917] mt-0.5 block">Deterministic Guardrails</span>
@@ -147,8 +147,8 @@ export default async function HomePage() {
               </div>
             </div>
 
-            {/* Right Column: 3D FLASH.Ai Lightning Brand Sculpture (Col span 5 = ~42%) */}
-            <div className="lg:col-span-5 flex items-center justify-center">
+            {/* Right Column: 3D AI Automation Core & Connected Display Panels (Col span 6 = ~50%) */}
+            <div className="lg:col-span-6 flex items-center justify-center">
               <HeroScene3D />
             </div>
           </div>
