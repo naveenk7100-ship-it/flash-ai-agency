@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Mail, Send, CheckCircle2, AlertCircle, Phone, MapPin, Globe, MessageSquare } from "lucide-react";
+import { Mail, Send, CheckCircle2, AlertCircle, Phone, MapPin, Globe, MessageSquare, ArrowUpRight } from "lucide-react";
+import { Instagram } from "@/components/icons/InstagramIcon";
 import { WHATSAPP_CONTACTS } from "@/lib/config";
 import { Container } from "@/components/Container";
 
@@ -191,10 +192,30 @@ export default function ContactPage() {
                   <div>
                     <strong className="text-[#1c1917] block font-semibold">Official Email</strong>
                     <a
-                      href="mailto:hello@flashai.agency"
-                      className="text-[#3b563d] hover:underline"
+                      href="mailto:flashai.digital@gmail.com"
+                      className="text-[#3b563d] hover:underline font-medium"
+                      title="Send email to official agency inbox"
                     >
-                      hello@flashai.agency
+                      flashai.digital@gmail.com
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-[#e5ede5] text-[#3b563d] flex items-center justify-center shrink-0">
+                    <Instagram className="w-4 h-4 text-[#3b563d]" />
+                  </div>
+                  <div>
+                    <strong className="text-[#1c1917] block font-semibold">Official Instagram</strong>
+                    <a
+                      href="https://www.instagram.com/flash__ai__digital/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#3b563d] hover:underline font-medium inline-flex items-center gap-1"
+                      title="Open official Instagram profile"
+                    >
+                      @flash__ai__digital
+                      <ArrowUpRight className="w-3 h-3 opacity-70" />
                     </a>
                   </div>
                 </div>
@@ -231,10 +252,19 @@ export default function ContactPage() {
                 </h3>
                 <div className="flex flex-wrap gap-2 text-xs">
                   <a
+                    href="https://www.instagram.com/flash__ai__digital/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1.5 rounded-lg bg-[#e5ede5] border border-[#cbdccb] text-[#3b563d] hover:text-[#1c1917] font-semibold flex items-center gap-1.5 transition-colors"
+                  >
+                    <Instagram className="w-3.5 h-3.5 text-[#E1306C]" />
+                    Instagram
+                  </a>
+                  <a
                     href="https://github.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3 py-1.5 rounded-lg bg-[#f7f4ee] border border-[#e7e2d8] text-[#57534e] hover:text-[#1c1917]"
+                    className="px-3 py-1.5 rounded-lg bg-[#f7f4ee] border border-[#e7e2d8] text-[#57534e] hover:text-[#1c1917] transition-colors"
                   >
                     GitHub
                   </a>
@@ -242,7 +272,7 @@ export default function ContactPage() {
                     href="https://linkedin.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3 py-1.5 rounded-lg bg-[#f7f4ee] border border-[#e7e2d8] text-[#57534e] hover:text-[#1c1917]"
+                    className="px-3 py-1.5 rounded-lg bg-[#f7f4ee] border border-[#e7e2d8] text-[#57534e] hover:text-[#1c1917] transition-colors"
                   >
                     LinkedIn
                   </a>
@@ -250,7 +280,7 @@ export default function ContactPage() {
                     href="https://x.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3 py-1.5 rounded-lg bg-[#f7f4ee] border border-[#e7e2d8] text-[#57534e] hover:text-[#1c1917]"
+                    className="px-3 py-1.5 rounded-lg bg-[#f7f4ee] border border-[#e7e2d8] text-[#57534e] hover:text-[#1c1917] transition-colors"
                   >
                     X (Twitter)
                   </a>

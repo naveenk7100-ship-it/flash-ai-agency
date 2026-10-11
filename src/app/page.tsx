@@ -21,8 +21,10 @@ import {
   Zap,
   Globe2,
   Bot,
-  MessageSquare
+  MessageSquare,
+  Mail
 } from "lucide-react";
+import { Instagram } from "@/components/icons/InstagramIcon";
 import { AGENCY_SERVICES, AGENCY_FAQS } from "@/lib/data";
 import { db } from "@/lib/db";
 import { HeroScene3D } from "@/components/HeroScene3D";
@@ -516,11 +518,11 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            {/* Direct WhatsApp Engineering Chat Links */}
+            {/* Direct Official Contact Channels: WhatsApp, Email & Instagram */}
             <div className="reveal-item reveal-delay-2 flex flex-wrap items-center justify-center gap-2.5 mb-12 text-xs">
-              <span className="text-[#86c289] font-mono text-[11px] flex items-center gap-1.5">
+              <span className="text-[#86c289] font-mono text-[11px] flex items-center gap-1.5 mr-1">
                 <MessageSquare className="w-3.5 h-3.5 text-[#25D366]" />
-                WhatsApp Direct:
+                Official Channels:
               </span>
               <a
                 href={WHATSAPP_CONTACTS.line1.chatUrl}
@@ -539,6 +541,24 @@ export default async function HomePage() {
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-[#25D366]" />
                 Line 2: {WHATSAPP_CONTACTS.line2.display}
+              </a>
+              <a
+                href="mailto:flashai.digital@gmail.com"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#1a271c] hover:bg-[#233527] border border-[#2b3e2e] hover:border-[#86c289] text-[#e5ede5] hover:text-white transition-colors font-mono text-[11px] font-semibold"
+                title="Send direct email"
+              >
+                <Mail className="w-3 h-3 text-[#86c289]" />
+                flashai.digital@gmail.com
+              </a>
+              <a
+                href="https://www.instagram.com/flash__ai__digital/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#1a271c] hover:bg-[#233527] border border-[#2b3e2e] hover:border-[#E1306C] text-[#e5ede5] hover:text-white transition-colors font-mono text-[11px] font-semibold"
+                title="Open official Instagram"
+              >
+                <Instagram className="w-3 h-3 text-[#E1306C]" />
+                @flash__ai__digital
               </a>
             </div>
 

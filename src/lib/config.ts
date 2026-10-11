@@ -50,7 +50,9 @@ export const WHATSAPP_CONTACTS = contactsList;
 export const AGENCY_CONFIG = {
   name: "FLASH.Ai Agency",
   tagline: "AI Automation & Systems Engineering Studio",
-  email: process.env.NEXT_PUBLIC_AGENCY_EMAIL || "hello@flashai.agency",
+  email: process.env.NEXT_PUBLIC_AGENCY_EMAIL || "flashai.digital@gmail.com",
+  instagram: "https://www.instagram.com/flash__ai__digital/",
+  instagramHandle: "@flash__ai__digital",
   phone: "+91 93984 21460",
   secondaryPhone: "+91 85238 46914",
   location: process.env.NEXT_PUBLIC_BUSINESS_LOCATION || "",
@@ -65,5 +67,8 @@ export const AGENCY_CONFIG = {
   },
   get whatsappLink(): string {
     return "https://wa.me/919398421460";
+  },
+  get mailtoLink(): string {
+    return `mailto:${this.email}`;
   }
 };

@@ -61,8 +61,8 @@ export default function PrivacyPage() {
             <h2 className="text-base font-bold text-[#1c1917]">5. Inquiries & Data Removal</h2>
             <p>
               To request a copy of your stored records or request complete deletion of your booking inquiry, please contact our data team at{" "}
-              <a href="mailto:privacy@flashai.agency" className="text-[#3b563d] underline">
-                privacy@flashai.agency
+              <a href="mailto:flashai.digital@gmail.com" className="text-[#3b563d] underline">
+                flashai.digital@gmail.com
               </a>.
             </p>
           </div>

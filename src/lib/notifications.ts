@@ -77,7 +77,7 @@ export async function sendEmailAlert(message: {
   brief: string;
 }): Promise<EmailNotificationResult> {
   const apiKey = process.env.RESEND_API_KEY;
-  const toEmail = process.env.AGENCY_NOTIFICATION_EMAIL || "contact@flashai.agency";
+  const toEmail = process.env.AGENCY_NOTIFICATION_EMAIL || "flashai.digital@gmail.com";
 
   if (!apiKey) {
     return {

@@ -131,15 +131,6 @@ export function Navbar() {
           </div>
 
           <Link
-            href="/admin"
-            className="text-xs font-medium px-2.5 py-2 rounded-lg text-[#57534e] hover:text-[#1c1917] hover:bg-[#f7f4ee] transition-all flex items-center gap-1.5"
-            title="Secure Staff Portal"
-          >
-            <ShieldCheck className="w-3.5 h-3.5 text-[#5f8861]" />
-            Staff
-          </Link>
-
-          <Link
             href="/booking"
             className="btn-sage-primary text-xs py-2.5 px-5 rounded-lg shadow-sm"
           >
@@ -212,13 +203,6 @@ export function Navbar() {
                 className="btn-sage-primary w-full text-center py-3"
               >
                 Book Discovery Call
-              </Link>
-              <Link
-                href="/admin"
-                onClick={() => setMobileOpen(false)}
-                className="w-full text-center py-2 text-xs text-[#57534e] hover:text-[#1c1917]"
-              >
-                Staff Portal
               </Link>
             </div>
           </div>

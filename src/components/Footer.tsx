@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Mail, MapPin, ShieldCheck, ArrowUpRight } from "lucide-react";
+import { Mail, ArrowUpRight } from "lucide-react";
+import { Instagram } from "@/components/icons/InstagramIcon";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Container } from "@/components/Container";
 
@@ -110,15 +111,34 @@ export function Footer() {
           {/* Trust & WhatsApp Lines */}
           <div>
             <h4 className="text-xs font-semibold text-[#1c1917] tracking-wider uppercase mb-4">
-              Direct Contact & WhatsApp
+              Direct Contact & Channels
             </h4>
             <ul className="space-y-3 text-xs">
               <li className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-[#5f8861] shrink-0" />
-                <a href="mailto:hello@flashai.agency" className="hover:text-[#1c1917] transition-colors">
-                  hello@flashai.agency
+                <a
+                  href="mailto:flashai.digital@gmail.com"
+                  className="hover:text-[#1c1917] transition-colors"
+                  title="Compose email to official agency inbox"
+                >
+                  flashai.digital@gmail.com
                 </a>
               </li>
+
+              <li className="flex items-center gap-2">
+                <Instagram className="w-3.5 h-3.5 text-[#5f8861] shrink-0" />
+                <a
+                  href="https://www.instagram.com/flash__ai__digital/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[#1c1917] transition-colors inline-flex items-center gap-1 font-medium"
+                  title="Official Instagram profile"
+                >
+                  @flash__ai__digital
+                  <ArrowUpRight className="w-2.5 h-2.5 opacity-60" />
+                </a>
+              </li>
+
               <li className="text-[#78716c]">
                 Remote First • Worldwide Operations
               </li>
@@ -183,10 +203,6 @@ export function Footer() {
             </Link>
             <Link href="/terms" className="hover:text-[#1c1917] transition-colors">
               Terms of Service
-            </Link>
-            <Link href="/admin" className="hover:text-[#1c1917] transition-colors flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#5f8861]" />
-              Staff Login
             </Link>
           </div>
         </div>

@@ -83,9 +83,7 @@ function run() {
   if (!envMap.has("ADMIN_SECRET_KEY")) {
     envMap.set("ADMIN_SECRET_KEY", "flash-admin-2026");
   }
-  if (!envMap.has("AGENCY_NOTIFICATION_EMAIL")) {
-    envMap.set("AGENCY_NOTIFICATION_EMAIL", "hello@flashai.agency");
-  }
+  envMap.set("AGENCY_NOTIFICATION_EMAIL", "flashai.digital@gmail.com");
 
   // Rebuild file content
   const updatedLines = [];

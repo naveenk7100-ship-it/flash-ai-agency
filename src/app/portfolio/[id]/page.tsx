@@ -224,7 +224,14 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <span className="text-xs font-bold font-mono">@flashai.agency</span>
+                    <a
+                      href="https://www.instagram.com/flash__ai__digital/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-bold font-mono hover:underline text-white"
+                    >
+                      @flash__ai__digital
+                    </a>
                     <span className="w-2 h-2 rounded-full bg-[#25D366]" />
                   </div>
                   <span className="text-[10px] text-[#86c289] font-mono">STATUS: PUBLISHED // CONTAINER #839219</span>

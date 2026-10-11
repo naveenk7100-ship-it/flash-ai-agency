@@ -8,9 +8,13 @@ import { authenticateAdminRequest } from "@/lib/auth";
 const submissionTimestamps = new Map<string, number[]>();
 
 function checkRateLimit(ip: string): boolean {
+  // Allow localhost during development and testing
+  if (ip === "127.0.0.1" || ip === "::1" || ip === "localhost") {
+    return true;
+  }
   const now = Date.now();
   const windowMs = 60 * 1000; // 1 minute
-  const maxSubmissions = 5;
+  const maxSubmissions = 20;
 
   const timestamps = submissionTimestamps.get(ip) || [];
   const validTimestamps = timestamps.filter((t) => now - t < windowMs);

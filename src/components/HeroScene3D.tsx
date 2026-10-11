@@ -200,15 +200,15 @@ function createInstagramCanvasTexture(): THREE.CanvasTexture {
   ctx.fillText("IG", 31, 34);
 
   ctx.fillStyle = "#1c1917";
-  ctx.font = "bold 14px -apple-system, sans-serif";
-  ctx.fillText("@flashai.agency", 64, 33);
+  ctx.font = "bold 13px -apple-system, sans-serif";
+  ctx.fillText("@flash__ai__digital", 64, 33);
 
   // Verified checkmark
   ctx.fillStyle = "#5f8861";
-  ctx.beginPath(); ctx.arc(186, 29, 7, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(206, 29, 7, 0, Math.PI * 2); ctx.fill();
   ctx.fillStyle = "#ffffff";
   ctx.font = "bold 9px sans-serif";
-  ctx.fillText("✓", 183, 32);
+  ctx.fillText("✓", 203, 32);
 
   // Queue status badge
   ctx.fillStyle = "#e5ede5";
