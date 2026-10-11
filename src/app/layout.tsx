@@ -7,18 +7,17 @@ import { Footer } from "@/components/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "FLASH.Ai Agency — Production AI Systems, Agentic Workflows & Cinematic Web",
+  title: "Flash.ai Agency — AI Workflow Automation, Agents & High-Conversion Systems",
   description:
-    "Boutique AI engineering agency building verified production systems: autonomous multi-model agents, Navier-Stokes PDE inpainting, real-time trend intelligence radars, and high-conversion web platforms.",
+    "Flash.ai Agency engineers bespoke AI workflow automation, custom AI agents, n8n orchestrations, lead capture systems, and conversion-focused websites for SMBs and agencies worldwide.",
   keywords: [
-    "FLASH.Ai",
-    "AI Agency",
-    "Agentic Workflows",
-    "Next.js AI Platforms",
-    "TrendPost",
-    "CleanCut AI",
-    "GlobalLead AI",
-    "ExamPilot"
+    "Flash.ai Agency",
+    "AI workflow automation",
+    "custom AI agents",
+    "n8n automation",
+    "lead management automation",
+    "appointment booking systems",
+    "conversion websites"
   ]
 };
 
@@ -28,12 +27,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark scroll-smooth">
+    <html lang="en" className="scroll-smooth">
       <body
-        className={`${inter.className} min-h-screen flex flex-col bg-[#020106] text-zinc-100 antialiased selection:bg-[#863bff] selection:text-white`}
+        className={`${inter.className} min-h-screen flex flex-col bg-[#fdfbf7] text-[#1c1917] antialiased selection:bg-[#cbdccb] selection:text-[#293a2b]`}
       >
         <Navbar />
-        {/* Main page content container */}
         <main className="flex-grow pt-20">{children}</main>
         <Footer />
       </body>

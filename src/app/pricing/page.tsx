@@ -1,148 +1,150 @@
 import Link from "next/link";
-import { CheckCircle2, ArrowRight, Sparkles, HelpCircle } from "lucide-react";
+import { CheckCircle2, ArrowRight, ShieldCheck, HelpCircle } from "lucide-react";
 
 export const metadata = {
-  title: "Pricing & Custom Quotes — FLASH.Ai Agency",
-  description: "Transparent engineering tiers and custom quote requests with zero hidden fees."
+  title: "Investment & Scoping — Flash.ai Agency",
+  description: "Transparent pricing guidelines and scope ranges for AI automation, custom agents, and web applications."
 };
 
 export default function PricingPage() {
   const tiers = [
     {
-      name: "Agent & Pipeline Starter",
-      price: "$1,200",
-      period: "one-time build",
-      tagline: "Ideal for automating internal tasks or launching a targeted AI agent.",
-      features: [
-        "Single autonomous agent pipeline (OpenRouter, Gemini, OpenAI)",
-        "Telegram or Discord interactive delivery integration",
-        "Scheduled background crons & webhook triggers",
-        "SSRF protection & input validation",
-        "Deployment to Vercel or container platform with full docs"
+      name: "Focused Automation",
+      investment: "Starting at $1,200",
+      description: "Ideal for businesses wanting to automate a single high-friction workflow.",
+      deliverables: [
+        "Single n8n or Python automation pipeline",
+        "Document parsing or webhook data synchronization",
+        "Deterministic JSON schema validation",
+        "Slack, WhatsApp, or Email alert dispatches",
+        "2 weeks of post-launch monitoring"
       ],
-      serviceId: "autonomous-ai-agents",
-      popular: false
+      suitable: "SMBs looking to replace 10+ hours/week of repetitive manual tasks.",
+      serviceId: "ai-workflow-automation"
     },
     {
-      name: "Cinematic Full-Stack Platform",
-      price: "$2,800",
-      period: "one-time build",
-      tagline: "Production Next.js application with 3D WebGL hero, database, and CRM.",
-      features: [
-        "Complete Next.js App Router & React 19 architecture",
-        "Custom Three.js 3D interactive hero scene",
-        "Persistent serverless database (Postgres / Redis)",
-        "Admin portal for lead and booking management",
-        "Official WhatsApp & Email notification integration",
-        "100/100 Lighthouse performance and SEO optimization"
+      name: "Autonomous Agent Suite",
+      investment: "Starting at $2,200",
+      description: "Purpose-built multi-step agent with structured memory and CRM tool execution.",
+      deliverables: [
+        "Custom autonomous agent with strict operating boundaries",
+        "Knowledge base retrieval over internal SOPs or documentation",
+        "Tool-calling integration into internal databases and APIs",
+        "Human-in-the-loop fallback escalation queues",
+        "Full staff training session and operational runbooks"
       ],
-      serviceId: "cinematic-web-platforms",
-      popular: true
+      popular: true,
+      suitable: "Agencies, SaaS founders, or real-estate brokerages needing contextual triage.",
+      serviceId: "custom-ai-agents"
     },
     {
-      name: "Deep Tech & Computer Vision",
-      price: "Custom Scope",
-      period: "milestone-based",
-      tagline: "For teams requiring OpenCV, FFmpeg, PDE mathematical modeling, or custom ML microservices.",
-      features: [
-        "Specialized computer vision & inpainting pipelines",
-        "FastAPI Python Docker container architecture",
-        "Lossless video multiplexing & streaming",
-        "High-concurrency cloud deployments (Render / AWS)",
-        "Dedicated weekly engineering syncs & architecture audits"
+      name: "Complete Systems Architecture",
+      investment: "Starting at $4,500",
+      description: "End-to-end operational overhaul: custom web platform, lead capture, and full automation.",
+      deliverables: [
+        "Full-stack Next.js web application with sub-second page loads",
+        "Automated multi-channel lead enrichment and CRM sync",
+        "Self-hosted Dockerized n8n instance deployment",
+        "Custom client booking intake with timezone intelligence",
+        "Priority architectural support & monthly maintenance retainer"
       ],
-      serviceId: "computer-vision-media",
-      popular: false
+      suitable: "High-growth agencies scaling operations across international markets.",
+      serviceId: "website-design-and-conversion"
     }
   ];
 
   return (
-    <div className="py-16 md:py-24 relative overflow-hidden">
-      {/* Background glow */}
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-[#863bff]/15 blur-[150px] pointer-events-none rounded-full" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div className="bg-[#fdfbf7] py-16 md:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#863bff]/15 border border-[#863bff]/30 text-[#c084fc] text-xs font-semibold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-[#a855f7]" />
-            Transparent Engagements
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e5ede5] border border-[#cbdccb] text-[#3b563d] text-xs font-semibold">
+            Transparent Investment Guidelines
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight">
-            Predictable Pricing. Zero Secret Fees.
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-[#1c1917] tracking-tight">
+            Predictable Scoping. Zero Hidden Fees.
           </h1>
-          <p className="text-zinc-400 text-base sm:text-lg">
-            Every engagement includes complete source code ownership, production deployment setup, and comprehensive documentation.
+          <p className="text-base sm:text-lg text-[#57534e] leading-relaxed">
+            We operate on fixed-fee milestones agreed upon upfront. We do not charge ambiguous hourly retainers without defined deliverables.
           </p>
         </div>
 
-        {/* Pricing Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20 items-stretch">
+        {/* Pricing Tiers */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           {tiers.map((tier) => (
             <div
               key={tier.name}
-              className={`rounded-3xl glass-panel p-8 flex flex-col justify-between transition-all ${
+              className={`natural-card p-8 flex flex-col justify-between ${
                 tier.popular
-                  ? "border-[#863bff] shadow-[0_0_35px_rgba(134,59,255,0.3)] relative -translate-y-2"
-                  : "border-white/10 hover:border-white/20"
+                  ? "bg-[#ffffff] border-[#5f8861] ring-1 ring-[#5f8861]/20 shadow-md"
+                  : "bg-[#ffffff]"
               }`}
             >
-              {tier.popular && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-[#863bff] to-[#a855f7] text-white text-[11px] font-bold uppercase tracking-wider shadow-lg">
-                  Most Requested Architecture
-                </div>
-              )}
-
               <div>
-                <h3 className="text-xl font-bold text-white mb-2">{tier.name}</h3>
-                <p className="text-xs text-zinc-400 mb-6">{tier.tagline}</p>
-
-                <div className="mb-6">
-                  <span className="text-4xl font-black text-white">{tier.price}</span>
-                  <span className="text-xs text-zinc-400 font-mono ml-2">/ {tier.period}</span>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-bold text-[#1c1917]">{tier.name}</h2>
+                  {tier.popular && (
+                    <span className="sage-badge text-[10px] py-0.5">Most Requested</span>
+                  )}
                 </div>
 
-                <div className="space-y-3 mb-8">
-                  {tier.features.map((feat, idx) => (
-                    <div key={idx} className="flex items-start gap-2.5 text-xs text-zinc-300">
-                      <CheckCircle2 className="w-4 h-4 text-[#863bff] shrink-0 mt-0.5" />
-                      <span>{feat}</span>
-                    </div>
-                  ))}
+                <div className="mb-4">
+                  <span className="text-2xl sm:text-3xl font-extrabold text-[#1c1917]">
+                    {tier.investment}
+                  </span>
+                  <span className="text-xs text-[#78716c] block mt-1">One-time milestone scope</span>
+                </div>
+
+                <p className="text-xs text-[#57534e] leading-relaxed mb-6">
+                  {tier.description}
+                </p>
+
+                <div className="space-y-3 mb-6">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#78716c] block">
+                    What&apos;s Included:
+                  </span>
+                  <ul className="space-y-2">
+                    {tier.deliverables.map((item, idx) => (
+                      <li key={idx} className="flex items-start gap-2 text-xs text-[#1c1917]">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#5f8861] shrink-0 mt-0.5" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="p-3 rounded-lg bg-[#f7f4ee] border border-[#e7e2d8] text-xs text-[#57534e] mb-6">
+                  <strong className="block text-[#1c1917] font-semibold mb-0.5">Best Suited For:</strong>
+                  {tier.suitable}
                 </div>
               </div>
 
-              <div>
+              <div className="pt-4 border-t border-[#e7e2d8]">
                 <Link
                   href={`/booking?service=${tier.serviceId}`}
-                  className={`w-full py-3.5 rounded-xl text-center block text-xs font-bold uppercase tracking-wider transition-all ${
-                    tier.popular
-                      ? "bg-gradient-to-r from-[#863bff] to-[#a855f7] text-white shadow-[0_0_20px_rgba(134,59,255,0.4)] hover:shadow-[0_0_30px_rgba(134,59,255,0.6)]"
-                      : "bg-white/10 hover:bg-white/20 text-white"
+                  className={`w-full py-2.5 text-xs text-center ${
+                    tier.popular ? "btn-sage-primary" : "btn-sage-secondary"
                   }`}
                 >
-                  Choose Tier & Book
+                  Schedule Scoping Call
                 </Link>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Custom Quote Request Banner */}
-        <div className="glass-panel rounded-3xl p-8 md:p-12 border border-white/10 text-center max-w-4xl mx-auto space-y-4">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-            Have a Specific Multi-Repository or ML Requirement?
-          </h2>
-          <p className="text-xs sm:text-sm text-zinc-300 max-w-xl mx-auto">
-            Need a custom quote with NDA, dedicated microservices, or specific on-premises compliance? Fill out our brief form and receive an architectural estimate within 24 hours.
-          </p>
-          <div className="pt-2">
-            <Link
-              href="/booking"
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white text-black hover:bg-zinc-200 text-xs font-bold uppercase tracking-wider transition-colors shadow-lg"
-            >
-              Submit Custom Project Scope <ArrowRight className="w-4 h-4" />
-            </Link>
+        {/* Retainer & Custom Inquiries */}
+        <div className="natural-card p-8 sm:p-10 bg-[#ffffff] max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-2">
+            <h3 className="text-lg font-bold text-[#1c1917]">
+              Need Continuous Engineering or Maintenance Retainers?
+            </h3>
+            <p className="text-xs sm:text-sm text-[#57534e] leading-relaxed">
+              We offer dedicated monthly engineering retainers starting at $950/month for active monitoring, workflow iterations, and prompt optimization.
+            </p>
           </div>
+          <Link href="/contact" className="btn-sage-secondary text-xs py-2.5 px-6 shrink-0">
+            Inquire About Retainers
+          </Link>
         </div>
       </div>
     </div>

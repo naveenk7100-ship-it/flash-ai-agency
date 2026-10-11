@@ -1,22 +1,47 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { AGENCY_SERVICES } from "@/lib/data";
-import { CheckCircle2, Calendar, Clock, Send, ShieldCheck, AlertCircle, Sparkles } from "lucide-react";
-import confetti from "canvas-confetti";
+import {
+  Calendar,
+  Clock,
+  Send,
+  ShieldCheck,
+  CheckCircle2,
+  AlertCircle,
+  HelpCircle,
+  Globe,
+  ArrowRight
+} from "lucide-react";
 
-export default function BookingPage() {
+function BookingFormContent() {
+  const searchParams = useSearchParams();
+  const preselectedService = searchParams.get("service") || AGENCY_SERVICES[0].id;
+  const projectRef = searchParams.get("projectRef") || "";
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     phone: "",
     company: "",
-    serviceId: AGENCY_SERVICES[0].id,
+    website: "",
+    serviceId: preselectedService,
     preferredDate: "",
-    preferredTime: "14:00 - 16:00 UTC",
+    preferredTime: "14:00 - 16:00",
+    timezone: "UTC",
     budgetRange: "$1,500 - $3,000",
-    projectBrief: ""
+    projectBrief: projectRef
+      ? `Inquiring about an architecture similar to the "${projectRef}" case study. `
+      : "",
+    referenceLinks: ""
   });
+
+  useEffect(() => {
+    if (preselectedService) {
+      setFormData((prev) => ({ ...prev, serviceId: preselectedService }));
+    }
+  }, [preselectedService]);
 
   const [loading, setLoading] = useState(false);
   const [responseStatus, setResponseStatus] = useState<{
@@ -41,24 +66,23 @@ export default function BookingPage() {
       if (res.ok && data.success) {
         setResponseStatus({
           success: true,
-          message: "Discovery call request logged successfully!",
+          message:
+            "Your discovery call request has been saved to our database. Our engineering team will review your project brief and email you to confirm the calendar invitation.",
           details: data
-        });
-        confetti({
-          particleCount: 80,
-          spread: 60,
-          origin: { y: 0.6 }
         });
         setFormData({
           fullName: "",
           email: "",
           phone: "",
           company: "",
+          website: "",
           serviceId: AGENCY_SERVICES[0].id,
           preferredDate: "",
-          preferredTime: "14:00 - 16:00 UTC",
+          preferredTime: "14:00 - 16:00",
+          timezone: "UTC",
           budgetRange: "$1,500 - $3,000",
-          projectBrief: ""
+          projectBrief: "",
+          referenceLinks: ""
         });
       } else {
         setResponseStatus({
@@ -77,221 +101,252 @@ export default function BookingPage() {
   };
 
   return (
-    <div className="py-16 md:py-24 relative overflow-hidden">
-      {/* Glow */}
-      <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#863bff]/15 blur-[150px] pointer-events-none rounded-full" />
+    <div className="max-w-3xl mx-auto">
+      {/* Notice Card */}
+      <div className="p-4 rounded-xl bg-[#e5ede5] border border-[#cbdccb] text-xs text-[#293a2b] mb-8 leading-relaxed">
+        <strong className="font-semibold block mb-0.5">Note on Scheduling:</strong>
+        This form logs a booking request in our system. Because we do not claim a meeting is finalized until our team reviews your timezone availability, we will confirm the calendar appointment via email within 24 hours.
+      </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-14 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#863bff]/15 border border-[#863bff]/30 text-[#c084fc] text-xs font-semibold uppercase tracking-wider">
-            <Calendar className="w-3.5 h-3.5 text-[#a855f7]" />
-            Direct Engineering Discovery
+      {/* Alert Messages */}
+      {responseStatus && (
+        <div
+          className={`p-5 rounded-2xl mb-8 text-xs sm:text-sm flex items-start gap-3 ${
+            responseStatus.success
+              ? "bg-[#e5ede5] text-[#293a2b] border border-[#cbdccb]"
+              : "bg-rose-50 text-rose-800 border border-rose-200"
+          }`}
+        >
+          {responseStatus.success ? (
+            <CheckCircle2 className="w-5 h-5 text-[#5f8861] shrink-0 mt-0.5" />
+          ) : (
+            <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+          )}
+          <div className="space-y-1">
+            <p className="font-semibold">{responseStatus.message}</p>
+            {responseStatus.details?.booking?.id && (
+              <p className="font-mono text-[11px] text-[#57534e]">
+                Tracking Request ID: {responseStatus.details.booking.id}
+              </p>
+            )}
           </div>
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
-            Schedule a Technical Discovery Call
-          </h1>
-          <p className="text-zinc-400 text-sm sm:text-base max-w-xl mx-auto">
-            Discuss your system requirements directly with our lead architect. No sales intermediaries, no vague proposals.
-          </p>
         </div>
+      )}
 
-        {/* Feedback Alert */}
-        {responseStatus && (
-          <div
-            className={`mb-8 p-6 rounded-2xl border ${
-              responseStatus.success
-                ? "bg-emerald-950/40 border-emerald-500/40 text-emerald-200"
-                : "bg-red-950/40 border-red-500/40 text-red-200"
-            }`}
-          >
-            <div className="flex items-start gap-3">
-              {responseStatus.success ? (
-                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-              ) : (
-                <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
-              )}
-              <div className="space-y-2 text-xs sm:text-sm">
-                <p className="font-bold">{responseStatus.message}</p>
-                {responseStatus.details?.notifications && (
-                  <div className="mt-2 space-y-1 font-mono text-xs opacity-90 border-t border-white/10 pt-2">
-                    <p>
-                      <strong>WhatsApp Status:</strong>{" "}
-                      {responseStatus.details.notifications.whatsapp.sent
-                        ? "✅ Delivered to Admin"
-                        : `ℹ️ ${responseStatus.details.notifications.whatsapp.reason}`}
-                    </p>
-                    <p>
-                      <strong>Email Status:</strong>{" "}
-                      {responseStatus.details.notifications.email.sent
-                        ? "✅ Sent via Resend"
-                        : `ℹ️ ${responseStatus.details.notifications.email.reason}`}
-                    </p>
-                    <p>
-                      <strong>Storage:</strong>{" "}
-                      {responseStatus.details.storage?.type} (Stored)
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Form Container */}
-        <div className="rounded-3xl glass-panel p-8 sm:p-12 glow-border">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
-                  Full Name *
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Elena Rostova"
-                  value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white placeholder-zinc-500 text-sm focus:outline-none focus:border-[#863bff] transition-colors"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
-                  Work Email *
-                </label>
-                <input
-                  type="email"
-                  required
-                  placeholder="elena@company.io"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white placeholder-zinc-500 text-sm focus:outline-none focus:border-[#863bff] transition-colors"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
-                  Phone / WhatsApp (Optional)
-                </label>
-                <input
-                  type="text"
-                  placeholder="+1 (555) 019-2834"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white placeholder-zinc-500 text-sm focus:outline-none focus:border-[#863bff] transition-colors"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
-                  Company / Organization
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Apex Health Systems"
-                  value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white placeholder-zinc-500 text-sm focus:outline-none focus:border-[#863bff] transition-colors"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
-                  Target Service Architecture *
-                </label>
-                <select
-                  value={formData.serviceId}
-                  onChange={(e) => setFormData({ ...formData, serviceId: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white text-sm focus:outline-none focus:border-[#863bff] transition-colors"
-                >
-                  {AGENCY_SERVICES.map((s) => (
-                    <option key={s.id} value={s.id} className="bg-[#0e0c18] text-white">
-                      {s.title} ({s.priceEstimate})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
-                  Estimated Budget Range
-                </label>
-                <select
-                  value={formData.budgetRange}
-                  onChange={(e) => setFormData({ ...formData, budgetRange: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white text-sm focus:outline-none focus:border-[#863bff] transition-colors"
-                >
-                  <option value="$1,200 - $2,500" className="bg-[#0e0c18] text-white">
-                    $1,200 - $2,500 (Agent Pipeline)
-                  </option>
-                  <option value="$2,500 - $5,000" className="bg-[#0e0c18] text-white">
-                    $2,500 - $5,000 (Full Web App)
-                  </option>
-                  <option value="$5,000 - $10,000+" className="bg-[#0e0c18] text-white">
-                    $5,000 - $10,000+ (Deep Tech / CV Engine)
-                  </option>
-                  <option value="Flexible / To be scoped" className="bg-[#0e0c18] text-white">
-                    Flexible / To be scoped
-                  </option>
-                </select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
-                  Preferred Date
-                </label>
-                <input
-                  type="date"
-                  value={formData.preferredDate}
-                  onChange={(e) => setFormData({ ...formData, preferredDate: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white text-sm focus:outline-none focus:border-[#863bff] transition-colors"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
-                  Preferred Time Window
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. 14:00 - 16:00 UTC or Morning IST"
-                  value={formData.preferredTime}
-                  onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white text-sm focus:outline-none focus:border-[#863bff] transition-colors"
-                />
-              </div>
-            </div>
-
+      {/* Form Container */}
+      <div className="natural-card p-8 sm:p-10 bg-[#ffffff]">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Row 1: Name & Email */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
-                Project Brief & Technical Requirements *
+              <label className="block text-xs font-semibold text-[#1c1917] mb-1.5">
+                Client Full Name *
               </label>
-              <textarea
+              <input
+                type="text"
                 required
-                rows={4}
-                placeholder="Explain the problem you want to automate, models you want to use, or platforms to integrate (e.g. Telegram, Meta, PostgreSQL, Docker)..."
-                value={formData.projectBrief}
-                onChange={(e) => setFormData({ ...formData, projectBrief: e.target.value })}
-                className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white placeholder-zinc-500 text-sm focus:outline-none focus:border-[#863bff] transition-colors"
+                placeholder="e.g. Maya Lin"
+                value={formData.fullName}
+                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                className="w-full px-3.5 py-2.5 rounded-lg border border-[#e7e2d8] text-xs text-[#1c1917] bg-[#fdfbf7] focus:outline-none focus:border-[#5f8861]"
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-4 rounded-xl bg-gradient-to-r from-[#863bff] via-[#9333ea] to-[#7c3aed] text-white font-bold text-xs uppercase tracking-wider shadow-[0_0_25px_rgba(134,59,255,0.45)] hover:shadow-[0_0_35px_rgba(134,59,255,0.65)] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            <div>
+              <label className="block text-xs font-semibold text-[#1c1917] mb-1.5">
+                Business Email Address *
+              </label>
+              <input
+                type="email"
+                required
+                placeholder="maya@company.com"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="w-full px-3.5 py-2.5 rounded-lg border border-[#e7e2d8] text-xs text-[#1c1917] bg-[#fdfbf7] focus:outline-none focus:border-[#5f8861]"
+              />
+            </div>
+          </div>
+
+          {/* Row 2: Company & Website */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label className="block text-xs font-semibold text-[#1c1917] mb-1.5">
+                Company / Organization Name *
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="e.g. Lin Agency Group"
+                value={formData.company}
+                onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                className="w-full px-3.5 py-2.5 rounded-lg border border-[#e7e2d8] text-xs text-[#1c1917] bg-[#fdfbf7] focus:outline-none focus:border-[#5f8861]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1c1917] mb-1.5">
+                Business Website (Optional)
+              </label>
+              <input
+                type="url"
+                placeholder="https://company.com"
+                value={formData.website}
+                onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                className="w-full px-3.5 py-2.5 rounded-lg border border-[#e7e2d8] text-xs text-[#1c1917] bg-[#fdfbf7] focus:outline-none focus:border-[#5f8861]"
+              />
+            </div>
+          </div>
+
+          {/* Row 3: Service Selection */}
+          <div>
+            <label className="block text-xs font-semibold text-[#1c1917] mb-1.5">
+              Selected Service Focus *
+            </label>
+            <select
+              value={formData.serviceId}
+              onChange={(e) => setFormData({ ...formData, serviceId: e.target.value })}
+              className="w-full px-3.5 py-2.5 rounded-lg border border-[#e7e2d8] text-xs text-[#1c1917] bg-[#fdfbf7] focus:outline-none focus:border-[#5f8861]"
             >
-              {loading ? "Recording System Booking..." : "Submit Discovery Request"}
-              <Send className="w-4 h-4" />
-            </button>
-          </form>
+              {AGENCY_SERVICES.map((srv) => (
+                <option key={srv.id} value={srv.id}>
+                  {srv.title} ({srv.startingInvestment})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Row 4: Date, Time & Timezone */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div>
+              <label className="block text-xs font-semibold text-[#1c1917] mb-1.5">
+                Preferred Date *
+              </label>
+              <input
+                type="date"
+                required
+                min={new Date().toISOString().split("T")[0]}
+                value={formData.preferredDate}
+                onChange={(e) => setFormData({ ...formData, preferredDate: e.target.value })}
+                className="w-full px-3.5 py-2.5 rounded-lg border border-[#e7e2d8] text-xs text-[#1c1917] bg-[#fdfbf7] focus:outline-none focus:border-[#5f8861]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1c1917] mb-1.5">
+                Preferred Time Slot *
+              </label>
+              <select
+                value={formData.preferredTime}
+                onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
+                className="w-full px-3.5 py-2.5 rounded-lg border border-[#e7e2d8] text-xs text-[#1c1917] bg-[#fdfbf7] focus:outline-none focus:border-[#5f8861]"
+              >
+                <option value="10:00 - 12:00">Morning (10:00 - 12:00)</option>
+                <option value="14:00 - 16:00">Afternoon (14:00 - 16:00)</option>
+                <option value="17:00 - 19:00">Evening (17:00 - 19:00)</option>
+                <option value="Flexible">Flexible / Anytime</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1c1917] mb-1.5">
+                Time Zone *
+              </label>
+              <select
+                value={formData.timezone}
+                onChange={(e) => setFormData({ ...formData, timezone: e.target.value })}
+                className="w-full px-3.5 py-2.5 rounded-lg border border-[#e7e2d8] text-xs text-[#1c1917] bg-[#fdfbf7] focus:outline-none focus:border-[#5f8861]"
+              >
+                <option value="IST (India)">IST (UTC+5:30) - India</option>
+                <option value="EST (US East)">EST (UTC-5:00) - New York / Toronto</option>
+                <option value="PST (US West)">PST (UTC-8:00) - San Francisco</option>
+                <option value="GMT/BST (UK)">GMT / BST - London</option>
+                <option value="AEST (Australia)">AEST (UTC+10:00) - Sydney / Melbourne</option>
+                <option value="UTC">UTC (Universal Time)</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Row 5: Estimated Budget */}
+          <div>
+            <label className="block text-xs font-semibold text-[#1c1917] mb-1.5">
+              Estimated Budget Range *
+            </label>
+            <select
+              value={formData.budgetRange}
+              onChange={(e) => setFormData({ ...formData, budgetRange: e.target.value })}
+              className="w-full px-3.5 py-2.5 rounded-lg border border-[#e7e2d8] text-xs text-[#1c1917] bg-[#fdfbf7] focus:outline-none focus:border-[#5f8861]"
+            >
+              <option value="$1,000 - $2,500">$1,000 - $2,500 (Targeted Automation or Single Workflow)</option>
+              <option value="$2,500 - $5,000">$2,500 - $5,000 (Multi-step Agent / n8n Platform)</option>
+              <option value="$5,000 - $10,000">$5,000 - $10,000 (Complete Agency Systems Overhaul)</option>
+              <option value="$10,000+">$10,000+ (Enterprise Deep Tech / Continuous Engineering)</option>
+            </select>
+          </div>
+
+          {/* Row 6: Project Brief */}
+          <div>
+            <label className="block text-xs font-semibold text-[#1c1917] mb-1.5">
+              Project Description & Requirements *
+            </label>
+            <textarea
+              required
+              rows={4}
+              placeholder="Describe your current manual workflow, what systems need to integrate (e.g. HubSpot, Slack, n8n, WhatsApp), and what you want to achieve..."
+              value={formData.projectBrief}
+              onChange={(e) => setFormData({ ...formData, projectBrief: e.target.value })}
+              className="w-full px-3.5 py-2.5 rounded-lg border border-[#e7e2d8] text-xs text-[#1c1917] bg-[#fdfbf7] focus:outline-none focus:border-[#5f8861]"
+            />
+          </div>
+
+          {/* Row 7: Optional Reference Links */}
+          <div>
+            <label className="block text-xs font-semibold text-[#1c1917] mb-1.5">
+              Optional Reference Links / Documentation (Drive, Loom, GitHub)
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. https://docs.google.com/document/d/... or Loom link"
+              value={formData.referenceLinks}
+              onChange={(e) => setFormData({ ...formData, referenceLinks: e.target.value })}
+              className="w-full px-3.5 py-2.5 rounded-lg border border-[#e7e2d8] text-xs text-[#1c1917] bg-[#fdfbf7] focus:outline-none focus:border-[#5f8861]"
+            />
+          </div>
+
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn-sage-primary w-full py-3 text-xs tracking-wider uppercase font-bold disabled:opacity-50"
+          >
+            {loading ? "Saving Booking Request..." : "Submit Discovery Call Request"}
+            <Send className="w-3.5 h-3.5" />
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default function BookingPage() {
+  return (
+    <div className="bg-[#fdfbf7] py-16 md:py-24">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e5ede5] border border-[#cbdccb] text-[#3b563d] text-xs font-semibold">
+            <Calendar className="w-3.5 h-3.5" />
+            Client Booking System
+          </div>
+          <h1 className="text-3xl sm:text-5xl font-extrabold text-[#1c1917] tracking-tight">
+            Schedule a Technical Discovery Call
+          </h1>
+          <p className="text-sm sm:text-base text-[#57534e] max-w-xl mx-auto leading-relaxed">
+            Discuss your system requirements directly with our lead engineer. No sales pressure, no generic proposals.
+          </p>
         </div>
+
+        <Suspense fallback={<div className="p-12 text-center text-xs text-[#78716c]">Loading booking intake...</div>}>
+          <BookingFormContent />
+        </Suspense>
       </div>
     </div>
   );
