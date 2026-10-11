@@ -1,20 +1,16 @@
 import Link from "next/link";
 import { Mail, MapPin, ShieldCheck, ArrowUpRight } from "lucide-react";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export function Footer() {
   return (
     <footer className="border-t border-[#e7e2d8] bg-[#f7f4ee] text-[#57534e]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="container-wide py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#e5ede5] border border-[#cbdccb] flex items-center justify-center text-[#3b563d] font-bold font-mono text-sm">
-                F.ai
-              </div>
-              <span className="text-lg font-bold tracking-tight text-[#1c1917]">
-                Flash.ai Agency
-              </span>
+            <Link href="/" className="group flex items-center">
+              <BrandLogo size="md" />
             </Link>
             <p className="text-sm text-[#57534e] leading-relaxed max-w-sm">
               We design and engineer bespoke AI workflow automations, custom AI agents, n8n infrastructure, and high-conversion web platforms for growing businesses.

@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# test screenshots
+/*.png
+/public/qa_*.png
+/public/edge_preview*.png
+/public/verified_*.png
+/public/final_qa_*.png
+/public/scroll_story_*.png
+/public/test_budget_*.png
+/public/hero_test_*.png
+/public/cinematic_*.png
+/public/hero_lightning_*.png

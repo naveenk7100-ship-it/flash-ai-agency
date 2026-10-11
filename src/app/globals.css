@@ -34,14 +34,61 @@
     border-color: var(--border-color);
   }
 
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
   body {
     background-color: var(--background);
     color: var(--foreground);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     overflow-x: hidden;
+    max-width: 100%;
     margin: 0;
     padding: 0;
     -webkit-font-smoothing: antialiased;
+    background-image: 
+      radial-gradient(ellipse at 50% 0%, rgba(95, 136, 97, 0.05), transparent 60%),
+      radial-gradient(ellipse at 85% 45%, rgba(203, 220, 203, 0.1), transparent 50%),
+      radial-gradient(ellipse at 15% 75%, rgba(95, 136, 97, 0.04), transparent 50%);
+  }
+
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+/* Fluid wide layout container - Centered with max-w-[1440px] and consistent responsive padding */
+.container-wide {
+  width: 100%;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .container-wide {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-wide {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .container-wide {
+    padding-left: 3rem;
+    padding-right: 3rem;
   }
 }
 
@@ -50,14 +97,14 @@
   background-color: #ffffff;
   border: 1px solid #e7e2d8;
   border-radius: 1rem;
-  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.04), 0 4px 12px rgba(28, 25, 23, 0.02);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.03), 0 4px 12px rgba(28, 25, 23, 0.02);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .natural-card:hover {
   border-color: #cbdccb;
-  box-shadow: 0 4px 16px rgba(95, 136, 97, 0.08), 0 1px 4px rgba(28, 25, 23, 0.04);
-  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(59, 86, 61, 0.09), 0 2px 6px rgba(28, 25, 23, 0.04);
+  transform: translateY(-3px);
 }
 
 /* Sage badges and pills */
@@ -83,18 +130,19 @@
   padding: 0.75rem 1.5rem;
   font-weight: 600;
   font-size: 0.875rem;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  box-shadow: 0 2px 6px rgba(73, 109, 75, 0.2);
+  box-shadow: 0 2px 8px rgba(73, 109, 75, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .btn-sage-primary:hover {
   background-color: #3b563d;
-  box-shadow: 0 4px 12px rgba(73, 109, 75, 0.3);
-  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(73, 109, 75, 0.35);
+  transform: translateY(-1.5px);
 }
 
 .btn-sage-secondary {
@@ -105,16 +153,110 @@
   padding: 0.75rem 1.5rem;
   font-weight: 600;
   font-size: 0.875rem;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.03);
 }
 
 .btn-sage-secondary:hover {
   background-color: #f7f4ee;
   border-color: #cbdccb;
+  transform: translateY(-1.5px);
+}
+
+/* Subtle interactive card lift and scroll accents */
+.reveal-item {
+  opacity: 1 !important;
+  transform: translateY(0);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.js-reveal .reveal-item.is-entering {
+  /* Subtle physical elevation rather than opacity fading */
+  animation: gentleLift 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes gentleLift {
+  from {
+    transform: translateY(10px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Stagger delays */
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* Subtle 3D Card Hover Perspective */
+.tilt-card {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-style: preserve-3d;
+}
+
+.tilt-card:hover {
+  transform: translateY(-4px) scale(1.01);
+}
+
+/* Animations & Visual accents */
+@keyframes pulseHalo {
+  0%, 100% {
+    opacity: 0.45;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.03);
+  }
+}
+
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes floatLag {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+.animate-pulse-halo {
+  animation: pulseHalo 8s ease-in-out infinite;
+}
+
+.animate-float-gentle {
+  animation: floatGentle 5s ease-in-out infinite;
+}
+
+.animate-float-lag {
+  animation: floatLag 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse-halo,
+  .animate-float-gentle,
+  .animate-float-lag,
+  .reveal-item,
+  .tilt-card {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 /* Restrained scrollbar */

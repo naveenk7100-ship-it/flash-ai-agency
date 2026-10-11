@@ -1,8 +1,6 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  ShieldCheck,
-  CheckCircle2,
   Workflow,
   Cpu,
   Share2,
@@ -11,13 +9,26 @@ import {
   Calendar,
   BarChart3,
   Layout,
-  ExternalLink,
-  HelpCircle,
+  CheckCircle2,
   Clock,
-  Sparkles
+  ShieldCheck,
+  Star,
+  Users,
+  ChevronRight,
+  Sparkles,
+  Phone,
+  Layers,
+  Zap,
+  Globe2,
+  Bot
 } from "lucide-react";
 import { AGENCY_SERVICES, AGENCY_FAQS } from "@/lib/data";
 import { db } from "@/lib/db";
+import { HeroScene3D } from "@/components/HeroScene3D";
+import { ScrollStoryController } from "@/components/ScrollStoryController";
+import { InteractiveProcessTimeline } from "@/components/InteractiveProcessTimeline";
+import { FaqAccordion } from "@/components/FaqAccordion";
+import { AGENCY_CONFIG } from "@/lib/config";
 
 const ICON_MAP: Record<string, any> = {
   Workflow,
@@ -36,416 +47,349 @@ export default async function HomePage() {
   const featuredProjects = projects.filter((p) => p.featured || p.status === "published").slice(0, 4);
 
   return (
-    <div className="bg-[#fdfbf7]">
+    <div className="bg-[#fdfbf7] text-[#1c1917] w-full selection:bg-[#cbdccb] selection:text-[#293a2b] relative">
+      {/* Scroll-Driven Top Progress Bar & Motion Coordinator */}
+      <ScrollStoryController />
+
       {/* ========================================================= */}
-      {/* 1. HERO SECTION                                           */}
+      {/* 1. CINEMATIC 3D HERO SECTION                              */}
       {/* ========================================================= */}
-      <section className="relative pt-12 pb-20 md:pt-20 md:pb-28 border-b border-[#e7e2d8]">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          {/* Subtle Tag */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#e5ede5] border border-[#cbdccb] text-[#3b563d] text-xs font-semibold mb-8">
-            <span className="w-2 h-2 rounded-full bg-[#5f8861]" />
-            AI Automation & Systems Engineering Agency
-          </div>
+      <section className="relative pt-6 pb-20 lg:pt-14 lg:pb-28 border-b border-[#e7e2d8] overflow-hidden">
+        {/* Subtle Ambient Studio Glows */}
+        <div className="absolute inset-0 bg-radial-gradient pointer-events-none opacity-50" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-full max-w-[640px] h-[360px] bg-gradient-to-b from-[#e5ede5]/45 via-[#cbdccb]/20 to-transparent blur-3xl pointer-events-none" />
 
-          {/* Agency Message */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-[#1c1917] tracking-tight leading-[1.15] mb-6">
-            Bespoke AI automations and workflows that save hours and eliminate busywork.
-          </h1>
+        <div className="container-wide relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+            {/* Left Column: Headline & CTAs (Col span 7 = ~58%) */}
+            <div className="lg:col-span-7 space-y-6 text-left">
+              {/* Subtle Verified Status Pill */}
+              <div className="reveal-item inline-flex flex-wrap items-center gap-1.5 sm:gap-2 px-3.5 py-1.5 rounded-full bg-[#e5ede5] border border-[#cbdccb] text-[#3b563d] text-[11px] sm:text-xs font-semibold shadow-sm max-w-full">
+                <span className="w-2 h-2 rounded-full bg-[#5f8861] animate-ping shrink-0" />
+                <span>AI Automation & Systems Studio</span>
+                <span className="text-[#a7c3a8]">•</span>
+                <span className="text-[#1c1917] font-mono text-[10px] sm:text-[11px]">Production Verified</span>
+              </div>
 
-          <p className="text-lg sm:text-xl text-[#57534e] max-w-3xl mx-auto font-normal leading-relaxed mb-10">
-            Flash.ai Agency designs custom AI workflows, autonomous agents, self-hosted n8n pipelines, and high-conversion web platforms for growing businesses and modern agencies.
-          </p>
+              {/* Redesigned Headline */}
+              <h1 className="reveal-item reveal-delay-1 text-[clamp(1.75rem,5.5vw,4.15rem)] font-extrabold text-[#1c1917] tracking-tight leading-[1.1] break-normal">
+                We Turn AI Into Your Unfair Advantage.
+              </h1>
 
-          {/* Primary & Secondary CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <Link
-              href="/booking"
-              className="btn-sage-primary w-full sm:w-auto px-8 py-3.5 text-sm"
-            >
-              Book a Discovery Call
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
-              href="/portfolio"
-              className="btn-sage-secondary w-full sm:w-auto px-8 py-3.5 text-sm"
-            >
-              Explore Our Work
-            </Link>
-          </div>
+              {/* Supporting Copy */}
+              <p className="reveal-item reveal-delay-2 text-base sm:text-lg text-[#57534e] max-w-xl font-normal leading-relaxed">
+                Custom AI agents, intelligent workflows, and high-performance digital experiences engineered to eliminate repetitive work and help ambitious businesses scale.
+              </p>
 
-          {/* Trust Highlights Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-[#e7e2d8] text-left">
-            <div className="p-3">
-              <span className="text-xs font-semibold text-[#3b563d] block">Architecture</span>
-              <p className="text-sm font-medium text-[#1c1917] mt-0.5">Deterministic Guardrails</p>
+              {/* Primary & Secondary CTAs */}
+              <div className="reveal-item reveal-delay-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
+                <Link
+                  href="/booking"
+                  className="btn-sage-primary text-sm py-3.5 px-8 flex items-center justify-center gap-2"
+                >
+                  Build Your AI Workflow
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+
+                <Link
+                  href="/portfolio"
+                  className="btn-sage-secondary text-sm py-3.5 px-8 flex items-center justify-center gap-2"
+                >
+                  Explore Our Work
+                </Link>
+
+                {AGENCY_CONFIG.hasPhone && (
+                  <a
+                    href={AGENCY_CONFIG.telLink}
+                    className="inline-flex items-center justify-center gap-2 text-xs font-semibold px-4 py-3 text-[#3b563d] hover:text-[#1c1917] transition-colors"
+                  >
+                    <Phone className="w-4 h-4" />
+                    <span>{AGENCY_CONFIG.phone}</span>
+                  </a>
+                )}
+              </div>
+
+              {/* Trust Metric Strip */}
+              <div className="reveal-item reveal-delay-4 pt-6 border-t border-[#e7e2d8] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 text-xs">
+                <div>
+                  <span className="text-[#78716c] block text-[11px] font-medium">Architecture</span>
+                  <span className="font-semibold text-[#1c1917] mt-0.5 block">Deterministic Guardrails</span>
+                </div>
+                <div>
+                  <span className="text-[#78716c] block text-[11px] font-medium">Cost Control</span>
+                  <span className="font-semibold text-[#1c1917] mt-0.5 block">Self-Hosted n8n & Open APIs</span>
+                </div>
+                <div>
+                  <span className="text-[#78716c] block text-[11px] font-medium">Oversight</span>
+                  <span className="font-semibold text-[#1c1917] mt-0.5 block">Human-in-the-Loop Reviews</span>
+                </div>
+                <div>
+                  <span className="text-[#78716c] block text-[11px] font-medium">Integrity</span>
+                  <span className="font-semibold text-[#1c1917] mt-0.5 block">Zero Fabricated Claims</span>
+                </div>
+              </div>
             </div>
-            <div className="p-3">
-              <span className="text-xs font-semibold text-[#3b563d] block">Cost Control</span>
-              <p className="text-sm font-medium text-[#1c1917] mt-0.5">Self-Hosted n8n & Open APIs</p>
-            </div>
-            <div className="p-3">
-              <span className="text-xs font-semibold text-[#3b563d] block">Quality Assurance</span>
-              <p className="text-sm font-medium text-[#1c1917] mt-0.5">Human-in-the-Loop Reviews</p>
-            </div>
-            <div className="p-3">
-              <span className="text-xs font-semibold text-[#3b563d] block">Integrity</span>
-              <p className="text-sm font-medium text-[#1c1917] mt-0.5">Zero Fabricated Claims</p>
+
+            {/* Right Column: 3D FLASH.Ai Lightning Brand Sculpture (Col span 5 = ~42%) */}
+            <div className="lg:col-span-5 flex items-center justify-center">
+              <HeroScene3D />
             </div>
           </div>
         </div>
       </section>
 
       {/* ========================================================= */}
-      {/* 2. AGENCY INTRODUCTION                                    */}
+      {/* 2. SERVICES SECTION                                       */}
       {/* ========================================================= */}
-      <section className="py-20 bg-[#ffffff] border-b border-[#e7e2d8]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center space-y-4 mb-12">
-            <span className="text-xs uppercase font-bold tracking-wider text-[#5f8861]">
-              Who We Are
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#1c1917] tracking-tight">
-              Calm, resilient engineering built for long-term reliability.
-            </h2>
-          </div>
-
-          <div className="space-y-6 text-[#57534e] text-base leading-relaxed">
-            <p>
-              Flash.ai Agency is a boutique AI engineering studio partnering with small-to-medium businesses, marketing agencies, and real-estate firms across India, the USA, the UK, Canada, and Australia.
-            </p>
-            <p>
-              We believe practical AI is not about gimmicky chatbots or complex generative promises. Real business value comes from eliminating repetitive manual handoffs: parsing inbound invoices, syncing leads from ad platforms into CRMs, routing client support tickets with strict knowledge boundaries, and automating calendar bookings.
-            </p>
-            <p>
-              We write clean, production-ready code with typed schemas, comprehensive error catching, and respectful human fallback controls. You get clear timelines, transparent documentation, and systems you truly own.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================= */}
-      {/* 3. SERVICES OVERVIEW                                      */}
-      {/* ========================================================= */}
-      <section className="py-20 md:py-28 bg-[#fdfbf7] border-b border-[#e7e2d8]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-            <span className="text-xs uppercase font-bold tracking-wider text-[#5f8861]">
-              What We Build
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#1c1917] tracking-tight">
-              Core Automation & Engineering Services
-            </h2>
-            <p className="text-sm sm:text-base text-[#57534e]">
-              Every solution is custom-architected for your business logic and existing tech stack.
+      <section id="services" className="py-20 lg:py-28 border-b border-[#e7e2d8]">
+        <div className="container-wide">
+          <div className="reveal-item flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+            <div className="max-w-2xl">
+              <span className="sage-badge mb-3">Enterprise Engineering Capabilities</span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1c1917] tracking-tight">
+                Eight production-grade automation specializations.
+              </h2>
+            </div>
+            <p className="text-sm text-[#57534e] max-w-md">
+              Every workflow is engineered around zero-loss data pipelines, deterministic failure recovery, and self-hosted open standards.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {AGENCY_SERVICES.map((srv) => {
-              const IconComponent = ICON_MAP[srv.iconName] || Workflow;
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {AGENCY_SERVICES.map((srv, idx) => {
+              const Icon = ICON_MAP[srv.iconName] || Workflow;
+              const delayClass = `reveal-delay-${(idx % 4) + 1}`;
               return (
                 <div
                   key={srv.id}
-                  className="natural-card p-6 flex flex-col justify-between"
+                  className={`reveal-item ${delayClass} natural-card tilt-card p-6 flex flex-col justify-between group hover:border-[#cbdccb] hover:shadow-[0_12px_28px_rgba(59,86,61,0.08)]`}
                 >
                   <div>
-                    <div className="w-10 h-10 rounded-lg bg-[#e5ede5] flex items-center justify-center text-[#3b563d] mb-4">
-                      <IconComponent className="w-5 h-5" />
+                    <div className="w-12 h-12 rounded-xl bg-[#e5ede5] text-[#3b563d] flex items-center justify-center mb-5 group-hover:bg-[#3b563d] group-hover:text-white transition-colors duration-300 shadow-sm">
+                      <Icon className="w-6 h-6" />
                     </div>
                     <span className="text-[11px] font-semibold text-[#5f8861] uppercase tracking-wider block mb-1">
                       {srv.badge}
                     </span>
-                    <h3 className="text-base font-bold text-[#1c1917] mb-2">{srv.title}</h3>
-                    <p className="text-xs sm:text-sm text-[#57534e] leading-relaxed line-clamp-3 mb-4">
-                      {srv.shortDescription}
-                    </p>
+                    <h3 className="text-lg font-bold text-[#1c1917] mb-2">{srv.title}</h3>
+                    <p className="text-xs text-[#57534e] leading-relaxed mb-6">{srv.shortDescription}</p>
+                  </div>
+                  <div>
+                    <div className="pt-4 border-t border-[#e7e2d8] flex items-center justify-between text-xs">
+                      <span className="font-semibold text-[#3b563d]">{srv.typicalTimeline}</span>
+                      <Link
+                        href={`/services/${srv.id}`}
+                        className="text-[#57534e] hover:text-[#1c1917] flex items-center gap-1 font-semibold group-hover:translate-x-1 transition-transform"
+                      >
+                        Deep Dive <ChevronRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================= */}
+      {/* 3. CASE STUDIES & PORTFOLIO                               */}
+      {/* ========================================================= */}
+      <section id="portfolio" className="py-20 lg:py-28 border-b border-[#e7e2d8] bg-[#f7f4ee]">
+        <div className="container-wide">
+          <div className="reveal-item flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+            <div>
+              <span className="sage-badge mb-3">Documented Client Deployments</span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1c1917] tracking-tight">
+                Real architectures. Measured operational impact.
+              </h2>
+            </div>
+            <Link
+              href="/portfolio"
+              className="btn-sage-secondary text-xs self-start md:self-auto"
+            >
+              Browse All Case Studies
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {featuredProjects.map((p, idx) => {
+              const delayClass = `reveal-delay-${idx + 1}`;
+              return (
+                <div key={p.id} className={`reveal-item ${delayClass} natural-card tilt-card p-8 flex flex-col justify-between hover:shadow-[0_16px_36px_rgba(59,86,61,0.1)]`}>
+                  <div>
+                    <div className="flex items-center justify-between gap-4 mb-4">
+                      <span className="sage-badge text-[11px] py-1">
+                        {p.category}
+                      </span>
+                      <span className="text-[11px] font-medium text-[#78716c] px-2.5 py-1 rounded bg-[#ffffff] border border-[#e7e2d8]">
+                        {p.projectType}
+                      </span>
+                    </div>
+                    <h3 className="text-2xl font-bold text-[#1c1917] mb-2">{p.name}</h3>
+                    <p className="text-xs font-semibold text-[#5f8861] mb-3">{p.tagline}</p>
+                    <p className="text-sm text-[#57534e] leading-relaxed mb-6">{p.problem}</p>
+
+                    <div className="p-4 rounded-xl bg-[#ffffff] border border-[#e7e2d8] mb-6 shadow-inner">
+                      <div className="text-xs font-bold text-[#1c1917] uppercase tracking-wider mb-1">
+                        Key Quantified Outcome
+                      </div>
+                      <div className="text-base font-extrabold text-[#3b563d]">{p.outcome}</div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {p.techStack.map((tech) => (
+                        <span
+                          key={tech}
+                          className="text-[11px] px-2.5 py-1 rounded-md bg-[#e5ede5] text-[#3b563d] font-medium"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
                   </div>
 
                   <div className="pt-4 border-t border-[#e7e2d8] flex items-center justify-between">
-                    <span className="text-xs font-semibold text-[#78716c]">
-                      {srv.typicalTimeline}
-                    </span>
+                    <span className="text-xs text-[#78716c]">Verified Client Architecture</span>
                     <Link
-                      href={`/services/${srv.id}`}
-                      className="text-xs font-semibold text-[#3b563d] hover:text-[#1c1917] flex items-center gap-1 group"
+                      href={`/portfolio/${p.id}`}
+                      className="text-xs font-bold text-[#3b563d] hover:text-[#1c1917] flex items-center gap-1"
                     >
-                      Details
-                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                      Read Technical Breakdown <ChevronRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>
                 </div>
               );
             })}
           </div>
-
-          <div className="text-center">
-            <Link
-              href="/services"
-              className="btn-sage-secondary text-xs px-6 py-2.5"
-            >
-              Browse Detailed Service Guides
-            </Link>
-          </div>
         </div>
       </section>
 
       {/* ========================================================= */}
-      {/* 4. FEATURED PORTFOLIO PROJECTS                            */}
+      {/* 4. VERIFIED CLIENT REVIEWS                                */}
       {/* ========================================================= */}
-      <section className="py-20 md:py-28 bg-[#ffffff] border-b border-[#e7e2d8]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-4">
+      <section id="reviews" className="py-20 lg:py-28 border-b border-[#e7e2d8]">
+        <div className="container-wide">
+          <div className="reveal-item flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div>
-              <span className="text-xs uppercase font-bold tracking-wider text-[#5f8861] block mb-2">
-                Proven Architectures
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-[#1c1917] tracking-tight">
-                Featured Case Studies
+              <span className="sage-badge mb-3">Authentic Client Testimonials</span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1c1917] tracking-tight">
+                Trusted by operators across global regions.
               </h2>
             </div>
-            <Link
-              href="/portfolio"
-              className="btn-sage-secondary text-xs px-5 py-2.5 self-start md:self-auto"
-            >
-              View Full Portfolio
+            <Link href="/reviews" className="btn-sage-secondary text-xs">
+              View All Reviews & Submit Feedback
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {featuredProjects.map((p) => (
-              <div
-                key={p.id}
-                className="natural-card p-8 flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="sage-badge text-[11px] py-1">
-                      {p.category}
-                    </span>
-                    <span className="text-[11px] font-medium text-[#78716c] px-2.5 py-1 rounded bg-[#f7f4ee] border border-[#e7e2d8]">
-                      {p.projectType}
-                    </span>
-                  </div>
-
-                  <h3 className="text-xl font-bold text-[#1c1917] mb-2">{p.name}</h3>
-                  <p className="text-xs font-semibold text-[#5f8861] mb-3">{p.tagline}</p>
-                  <p className="text-xs sm:text-sm text-[#57534e] leading-relaxed mb-6">
-                    {p.problem}
-                  </p>
-
-                  <div className="bg-[#f7f4ee] rounded-xl p-4 mb-6 border border-[#e7e2d8]">
-                    <span className="text-[11px] font-semibold text-[#1c1917] uppercase tracking-wider block mb-1">
-                      Demonstrated Outcome:
-                    </span>
-                    <p className="text-xs text-[#57534e]">{p.outcome}</p>
-                  </div>
-
-                  <div className="flex flex-wrap gap-1.5 mb-6">
-                    {p.techStack.map((tech) => (
-                      <span
-                        key={tech}
-                        className="text-[11px] font-mono px-2 py-0.5 rounded bg-[#ffffff] border border-[#e7e2d8] text-[#57534e]"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-[#e7e2d8] flex items-center justify-between">
-                  <Link
-                    href={`/portfolio/${p.id}`}
-                    className="text-xs font-semibold text-[#3b563d] hover:text-[#1c1917] flex items-center gap-1 group"
-                  >
-                    View Project Breakdown
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                  </Link>
-                  <Link
-                    href={`/booking?service=ai-workflow-automation&projectRef=${p.id}`}
-                    className="text-xs text-[#78716c] hover:text-[#1c1917]"
-                  >
-                    Inquire Similar Architecture
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================= */}
-      {/* 5. GENUINE CUSTOMER REVIEWS (WHEN AVAILABLE)              */}
-      {/* ========================================================= */}
-      <section className="py-20 bg-[#fdfbf7] border-b border-[#e7e2d8]">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center space-y-3 mb-12">
-            <span className="text-xs uppercase font-bold tracking-wider text-[#5f8861]">
-              Client Feedback
-            </span>
-            <h2 className="text-3xl font-bold text-[#1c1917] tracking-tight">
-              Verified Client Reviews
-            </h2>
-            <p className="text-xs sm:text-sm text-[#78716c]">
-              We strictly publish authorized, authenticated feedback from completed client engagements.
-            </p>
-          </div>
-
-          {reviews.length === 0 ? (
-            <div className="natural-card p-10 text-center max-w-xl mx-auto bg-[#ffffff]">
-              <div className="w-12 h-12 rounded-full bg-[#e5ede5] text-[#3b563d] flex items-center justify-center mx-auto mb-4">
-                <ShieldCheck className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-bold text-[#1c1917] mb-2">
-                Commitment to Authentic Client Feedback
-              </h3>
-              <p className="text-xs sm:text-sm text-[#57534e] leading-relaxed mb-6">
-                Unlike agencies that generate fictitious testimonials and stock client logos, we only present authorized testimonials approved directly by verified client stakeholders.
-              </p>
-              <Link
-                href="/reviews"
-                className="btn-sage-secondary text-xs px-4 py-2"
-              >
-                Submit Client Review / View Verification Policy
-              </Link>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {reviews.map((rev) => (
-                <div key={rev.id} className="natural-card p-6 bg-[#ffffff]">
-                  <div className="flex items-center gap-1 text-amber-500 mb-3">
-                    {Array.from({ length: rev.rating }).map((_, i) => (
-                      <span key={i}>★</span>
-                    ))}
-                  </div>
-                  <p className="text-sm text-[#1c1917] italic mb-4 leading-relaxed">
-                    &ldquo;{rev.reviewText}&rdquo;
-                  </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {reviews.slice(0, 3).map((r, idx) => {
+              const delayClass = `reveal-delay-${idx + 1}`;
+              return (
+                <div key={r.id} className={`reveal-item ${delayClass} natural-card tilt-card p-6 flex flex-col justify-between hover:shadow-[0_12px_28px_rgba(59,86,61,0.08)]`}>
                   <div>
-                    <h4 className="text-xs font-bold text-[#1c1917]">{rev.reviewerName}</h4>
-                    <p className="text-[11px] text-[#78716c]">
-                      {rev.role ? `${rev.role}, ` : ""}{rev.company}
+                    <div className="flex items-center gap-1 mb-4 text-[#5f8861]">
+                      {[...Array(r.rating)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-current" />
+                      ))}
+                    </div>
+                    <p className="text-sm text-[#57534e] italic leading-relaxed mb-6">
+                      &ldquo;{r.reviewText}&rdquo;
                     </p>
                   </div>
+
+                  <div className="pt-4 border-t border-[#e7e2d8] flex items-center justify-between">
+                    <div>
+                      <div className="font-bold text-sm text-[#1c1917]">{r.reviewerName}</div>
+                      <div className="text-xs text-[#78716c]">
+                        {r.role ? `${r.role}, ` : ""}{r.company}
+                      </div>
+                    </div>
+                    {r.verifiedClient && (
+                      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#3b563d] bg-[#e5ede5] px-2 py-0.5 rounded">
+                        <CheckCircle2 className="w-3 h-3" /> Verified
+                      </span>
+                    )}
+                  </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* ========================================================= */}
-      {/* 6. HOW OUR PROCESS WORKS                                  */}
-      {/* ========================================================= */}
-      <section id="process" className="py-20 md:py-28 bg-[#ffffff] border-b border-[#e7e2d8]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-            <span className="text-xs uppercase font-bold tracking-wider text-[#5f8861]">
-              Predictable Collaboration
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-[#1c1917] tracking-tight">
-              How Our Process Works
-            </h2>
-            <p className="text-sm sm:text-base text-[#57534e]">
-              A disciplined four-stage engineering methodology designed to prevent scope creep.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="p-6 rounded-2xl bg-[#f7f4ee] border border-[#e7e2d8] space-y-3">
-              <span className="text-2xl font-black text-[#5f8861] font-mono">01</span>
-              <h3 className="text-base font-bold text-[#1c1917]">Discovery & Scope Audit</h3>
-              <p className="text-xs text-[#57534e] leading-relaxed">
-                We review your current toolchain, identify operational bottlenecks, calculate realistic API token quotas, and agree on clear delivery milestones.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-[#f7f4ee] border border-[#e7e2d8] space-y-3">
-              <span className="text-2xl font-black text-[#5f8861] font-mono">02</span>
-              <h3 className="text-base font-bold text-[#1c1917]">Architecture & POC</h3>
-              <p className="text-xs text-[#57534e] leading-relaxed">
-                We build working prototypes with schema validations and guardrails, testing them against real sample business data in a staging environment.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-[#f7f4ee] border border-[#e7e2d8] space-y-3">
-              <span className="text-2xl font-black text-[#5f8861] font-mono">03</span>
-              <h3 className="text-base font-bold text-[#1c1917]">Integration & Hardening</h3>
-              <p className="text-xs text-[#57534e] leading-relaxed">
-                We establish webhook retry logic, dead-letter queues, automated exception alerts, and role-based staff permissions.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-[#f7f4ee] border border-[#e7e2d8] space-y-3">
-              <span className="text-2xl font-black text-[#5f8861] font-mono">04</span>
-              <h3 className="text-base font-bold text-[#1c1917]">Handover & Runbooks</h3>
-              <p className="text-xs text-[#57534e] leading-relaxed">
-                We provide complete operational documentation, team walkthrough recordings, and post-launch monitoring to ensure reliable daily operations.
-              </p>
-            </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* ========================================================= */}
-      {/* 7. FREQUENTLY ASKED QUESTIONS                             */}
+      {/* 5. IMPLEMENTATION PROCESS (Interactive Scroll Timeline)    */}
       {/* ========================================================= */}
-      <section id="faq" className="py-20 bg-[#fdfbf7] border-b border-[#e7e2d8]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center space-y-3 mb-14">
-            <span className="text-xs uppercase font-bold tracking-wider text-[#5f8861]">
-              Transparency First
-            </span>
-            <h2 className="text-3xl font-bold text-[#1c1917] tracking-tight">
-              Frequently Asked Questions
+      <section id="process" className="py-20 lg:py-28 border-b border-[#e7e2d8] bg-[#f7f4ee]">
+        <div className="container-wide">
+          <div className="reveal-item max-w-2xl mb-12">
+            <span className="sage-badge mb-3">Rigorous 4-Stage Methodology</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1c1917] tracking-tight mb-4">
+              How we take your operations from audit to autonomous execution.
             </h2>
             <p className="text-sm text-[#57534e]">
-              Direct answers regarding our engineering standards, timelines, and commitments.
+              No black boxes or brittle scripts. We document every webhook, API contract, and guardrail before deployment.
             </p>
           </div>
 
-          <div className="space-y-4">
-            {AGENCY_FAQS.map((faq, idx) => (
-              <div key={idx} className="natural-card p-6 bg-[#ffffff]">
-                <h3 className="text-base font-bold text-[#1c1917] mb-2 flex items-start gap-2.5">
-                  <HelpCircle className="w-5 h-5 text-[#5f8861] shrink-0 mt-0.5" />
-                  <span>{faq.question}</span>
-                </h3>
-                <p className="text-xs sm:text-sm text-[#57534e] leading-relaxed pl-7">
-                  {faq.answer}
-                </p>
-              </div>
-            ))}
+          <div className="reveal-item reveal-delay-2">
+            <InteractiveProcessTimeline />
           </div>
         </div>
       </section>
 
       {/* ========================================================= */}
-      {/* 8. FINAL BOOKING CTA                                      */}
+      {/* 6. FAQS (Interactive Accordion)                           */}
       {/* ========================================================= */}
-      <section className="py-20 md:py-28 bg-[#ffffff]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="natural-card p-10 sm:p-14 bg-[#f7f4ee] border-[#cbdccb]">
-            <span className="sage-badge text-xs mb-4">Ready to automate?</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1c1917] tracking-tight mb-4">
-              Let&apos;s map out your automation architecture.
-            </h2>
-            <p className="text-sm sm:text-base text-[#57534e] max-w-xl mx-auto leading-relaxed mb-8">
-              Schedule a 30-minute discovery call to discuss your bottlenecks, tool integrations, and budget requirements with an engineer.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <section id="faq" className="py-20 lg:py-28 border-b border-[#e7e2d8]">
+        <div className="container-wide">
+          <div className="max-w-3xl mx-auto">
+            <div className="reveal-item text-center mb-16">
+              <span className="sage-badge mb-3">Clear Answers</span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1c1917] tracking-tight mb-4">
+                Frequently Asked Questions
+              </h2>
+              <p className="text-sm text-[#57534e]">
+                Direct answers regarding our engineering standards, timelines, and commitments.
+              </p>
+            </div>
+
+            <div className="reveal-item reveal-delay-2">
+              <FaqAccordion items={AGENCY_FAQS} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================= */}
+      {/* 7. FINAL CALL TO ACTION                                   */}
+      {/* ========================================================= */}
+      <section className="py-20 lg:py-28 bg-[#f4f7f4] border-b border-[#cbdccb]">
+        <div className="container-wide">
+          <div className="max-w-3xl mx-auto text-center">
+            <div className="reveal-item">
+              <span className="sage-badge mb-4">Ready to Automate?</span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#1c1917] tracking-tight mb-6">
+                Ready to turn AI into your unfair advantage?
+              </h2>
+              <p className="text-base text-[#57534e] mb-10 leading-relaxed">
+                Schedule a confidential 30-minute discovery call. We will review your current software stack and outline an automation roadmap tailored to your specific budget and timeline.
+              </p>
+            </div>
+            <div className="reveal-item reveal-delay-2 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/booking"
-                className="btn-sage-primary w-full sm:w-auto px-8 py-3.5 text-sm"
+                className="btn-sage-primary text-base py-4 px-9 w-full sm:w-auto"
               >
-                Book a Discovery Call
-                <ArrowRight className="w-4 h-4" />
+                Build Your AI Workflow
+                <ArrowRight className="w-4 h-4 ml-1" />
               </Link>
               <Link
                 href="/contact"
-                className="btn-sage-secondary w-full sm:w-auto px-8 py-3.5 text-sm"
+                className="btn-sage-secondary text-base py-4 px-9 w-full sm:w-auto"
               >
-                Send Us a Message
+                Send an RFP / Custom Inquiry
               </Link>
             </div>
           </div>
