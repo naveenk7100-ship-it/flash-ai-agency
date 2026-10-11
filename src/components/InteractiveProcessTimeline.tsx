@@ -9,6 +9,7 @@ interface TimelineStep {
   desc: string;
   duration: string;
   icon: typeof Search;
+  telemetry: string;
   deliverables: string[];
 }
 
@@ -19,6 +20,7 @@ const STEPS: TimelineStep[] = [
     desc: "We audit your manual workflows, CRM schemas, and API endpoints to identify the highest-ROI bottlenecks with zero assumptions.",
     duration: "Week 1",
     icon: Search,
+    telemetry: "48-Hour Scope Blueprint",
     deliverables: ["Process Bottleneck Map", "Data Input Schemas", "ROI & Token Forecast"]
   },
   {
@@ -27,6 +29,7 @@ const STEPS: TimelineStep[] = [
     desc: "We build sandbox n8n flows, validate LLM structured JSON schemas, and test failover recovery on sanitized business records.",
     duration: "Week 1 – 2",
     icon: Cpu,
+    telemetry: "100% Deterministic Schema Pass",
     deliverables: ["Live Staging Pipeline", "Strict JSON Guardrails", "Fallback Decision Trees"]
   },
   {
@@ -35,6 +38,7 @@ const STEPS: TimelineStep[] = [
     desc: "Production deployment with rate-limiting, error alerts, audit logging, and human-in-the-loop sign-off controls.",
     duration: "Week 2 – 3",
     icon: ShieldCheck,
+    telemetry: "Dual Dead-Letter Failover",
     deliverables: ["Webhook Dead-Letter Queues", "Slack/Email Exception Queues", "Zero-Data-Loss Handlers"]
   },
   {
@@ -43,6 +47,7 @@ const STEPS: TimelineStep[] = [
     desc: "30 days of active warranty, exhaustive documentation handover, and ongoing token cost & throughput optimization.",
     duration: "Week 3+",
     icon: Activity,
+    telemetry: "30-Day Hypercare Guarantee",
     deliverables: ["Operations Runbook", "Staff Video Walkthroughs", "30-Day Hypercare Warranty"]
   }
 ];
@@ -74,7 +79,29 @@ export function InteractiveProcessTimeline() {
   }, []);
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8">
+      {/* Interactive Quick-Stage Navigation Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-2xl bg-white border border-[#e7e2d8] shadow-sm">
+        {STEPS.map((st, idx) => {
+          const isActive = idx === activeStep;
+          return (
+            <button
+              key={st.step}
+              type="button"
+              onClick={() => setActiveStep(idx)}
+              className={`flex-1 min-w-[130px] flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer ${
+                isActive
+                  ? "bg-[#3b563d] text-white shadow-[0_2px_10px_rgba(59,86,61,0.25)]"
+                  : "bg-transparent text-[#57534e] hover:bg-[#f7f4ee] hover:text-[#1c1917]"
+              }`}
+            >
+              <span className={`w-2 h-2 rounded-full ${isActive ? "bg-[#86c289] animate-pulse" : "bg-[#cbdccb]"}`} />
+              <span>Stage {st.step}</span>
+            </button>
+          );
+        })}
+      </div>
+
       {/* Dynamic Process Progress Bar with Animated Track */}
       <div className="relative w-full h-2 bg-[#e7e2d8] rounded-full overflow-hidden shadow-inner">
         <div
@@ -94,9 +121,9 @@ export function InteractiveProcessTimeline() {
             <div
               key={st.step}
               onClick={() => setActiveStep(idx)}
-              className={`p-6 rounded-2xl border transition-all duration-300 cursor-pointer select-none flex flex-col justify-between ${
+              className={`p-6 rounded-2xl border transition-all duration-300 cursor-pointer select-none flex flex-col justify-between hud-bracket ${
                 isActive
-                  ? "bg-[#ffffff] border-[#5f8861] shadow-[0_14px_36px_rgba(59,86,61,0.14)] scale-[1.02] ring-2 ring-[#5f8861]/30"
+                  ? "bg-[#ffffff] border-[#5f8861] shadow-[0_16px_36px_rgba(59,86,61,0.16)] scale-[1.02] ring-2 ring-[#5f8861]/30"
                   : isPassed
                   ? "bg-[#fdfbf7] border-[#cbdccb] shadow-sm hover:border-[#5f8861]"
                   : "bg-[#ffffff] border-[#e7e2d8] shadow-sm hover:border-[#cbdccb]"
@@ -120,13 +147,19 @@ export function InteractiveProcessTimeline() {
                   </span>
                 </div>
 
-                <span
-                  className={`text-xs font-mono font-bold tracking-wider uppercase block mb-1 ${
-                    isActive ? "text-[#5f8861]" : "text-[#78716c]"
-                  }`}
-                >
-                  Stage {st.step}
-                </span>
+                <div className="flex items-center justify-between gap-2 mb-1.5">
+                  <span
+                    className={`text-xs font-mono font-bold tracking-wider uppercase ${
+                      isActive ? "text-[#5f8861]" : "text-[#78716c]"
+                    }`}
+                  >
+                    Stage {st.step}
+                  </span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#f7f4ee] border border-[#e7e2d8] text-[#57534e]">
+                    {st.telemetry}
+                  </span>
+                </div>
+
                 <h3 className="text-base font-bold text-[#1c1917] mb-2">{st.title}</h3>
                 <p className="text-xs text-[#57534e] leading-relaxed mb-4">{st.desc}</p>
 

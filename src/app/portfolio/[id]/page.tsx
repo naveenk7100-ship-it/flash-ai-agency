@@ -55,11 +55,16 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
         </div>
 
         {/* Header Card */}
-        <div className="natural-card p-8 sm:p-12 mb-10 bg-[#ffffff]">
-          <div className="flex flex-wrap items-center gap-3 mb-6">
-            <span className="sage-badge text-xs">{project.category}</span>
+        <div className="bg-[#ffffff] border border-[#e7e2d8] rounded-2xl p-8 sm:p-12 mb-10 shadow-sm hud-bracket">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-[#e7e2d8]/70">
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-mono font-bold text-[#5f8861] bg-[#e5ede5] px-2.5 py-1 rounded">
+                DOSSIER // {project.id.toUpperCase()}
+              </span>
+              <span className="sage-badge text-xs">{project.category}</span>
+            </div>
             <span
-              className={`text-xs font-medium px-2.5 py-0.5 rounded-full border ${
+              className={`text-xs font-mono font-medium px-2.5 py-0.5 rounded-full border ${
                 project.projectType === "Client System"
                   ? "bg-emerald-50 text-emerald-800 border-emerald-200"
                   : project.projectType === "Concept Architecture"
@@ -67,7 +72,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
                   : "bg-blue-50 text-blue-800 border-blue-200"
               }`}
             >
-              {project.projectType}
+              ● {project.projectType}
             </span>
           </div>
 
@@ -78,11 +83,21 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
             {project.tagline}
           </p>
 
+          {/* Quantified Outcome Highlight */}
+          <div className="p-4 rounded-xl bg-[#f7f4ee] border border-[#cbdccb] mb-6">
+            <span className="text-[10px] font-mono uppercase text-[#78716c] font-bold block mb-1">
+              Verified Production Outcome:
+            </span>
+            <span className="text-base sm:text-lg font-extrabold text-[#3b563d]">
+              {project.outcome}
+            </span>
+          </div>
+
           <div className="flex flex-wrap gap-2 pt-4 border-t border-[#e7e2d8]">
             {project.techStack.map((tech) => (
               <span
                 key={tech}
-                className="text-xs font-mono px-3 py-1 rounded-md bg-[#f7f4ee] border border-[#e7e2d8] text-[#57534e]"
+                className="text-xs font-mono px-3 py-1 rounded-md bg-[#e5ede5] text-[#3b563d] font-medium"
               >
                 {tech}
               </span>

@@ -141,11 +141,15 @@ export default async function HomePage() {
       {/* ========================================================= */}
       {/* 2. SERVICES SECTION                                       */}
       {/* ========================================================= */}
-      <section id="services" className="py-20 lg:py-28 border-b border-[#e7e2d8]">
-        <div className="container-wide">
+      <section id="services" className="py-20 lg:py-28 border-b border-[#e7e2d8] relative">
+        <div className="absolute inset-0 tech-grid-bg opacity-30 pointer-events-none" />
+        <div className="container-wide relative z-10">
           <div className="reveal-item flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div className="max-w-2xl">
-              <span className="sage-badge mb-3">Enterprise Engineering Capabilities</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e5ede5] text-[#3b563d] text-xs font-mono font-semibold uppercase tracking-wider mb-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#5f8861] animate-pulse" />
+                <span>Enterprise Engineering Capabilities</span>
+              </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1c1917] tracking-tight">
                 Eight production-grade automation specializations.
               </h2>
@@ -159,24 +163,56 @@ export default async function HomePage() {
             {AGENCY_SERVICES.map((srv, idx) => {
               const Icon = ICON_MAP[srv.iconName] || Workflow;
               const delayClass = `reveal-delay-${(idx % 4) + 1}`;
+              const sysCode = `SYS.0${idx + 1}`;
+              const telemetries = [
+                "Zero-Loss Data Queue",
+                "Deterministic Agent Router",
+                "Self-Hosted n8n Engine",
+                "Real-Time CRM Webhooks",
+                "RAG Guardrail Validation",
+                "Calendar Sync Engine",
+                "Auto-Aggregated Datasets",
+                "Core Web Vitals Optimized"
+              ];
+              const telemetry = telemetries[idx] || "Deterministic Pipeline";
+
               return (
                 <div
                   key={srv.id}
-                  className={`reveal-item ${delayClass} natural-card tilt-card p-6 flex flex-col justify-between group hover:border-[#cbdccb] hover:shadow-[0_12px_28px_rgba(59,86,61,0.08)]`}
+                  className={`reveal-item ${delayClass} bg-[#ffffff] border border-[#e7e2d8] rounded-2xl p-6 flex flex-col justify-between group hover:border-[#5f8861] hover:shadow-[0_16px_36px_rgba(59,86,61,0.12)] transition-all duration-300 relative`}
                 >
                   <div>
-                    <div className="w-12 h-12 rounded-xl bg-[#e5ede5] text-[#3b563d] flex items-center justify-center mb-5 group-hover:bg-[#3b563d] group-hover:text-white transition-colors duration-300 shadow-sm">
-                      <Icon className="w-6 h-6" />
+                    {/* Header: System code & icon */}
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="w-12 h-12 rounded-xl bg-[#e5ede5] text-[#3b563d] flex items-center justify-center group-hover:bg-[#3b563d] group-hover:text-white transition-colors duration-300 shadow-sm">
+                        <Icon className="w-6 h-6" />
+                      </div>
+                      <span className="text-[10px] font-mono font-bold text-[#78716c] px-2 py-0.5 rounded bg-[#f7f4ee] border border-[#e7e2d8]">
+                        {sysCode}
+                      </span>
                     </div>
-                    <span className="text-[11px] font-semibold text-[#5f8861] uppercase tracking-wider block mb-1">
-                      {srv.badge}
-                    </span>
-                    <h3 className="text-lg font-bold text-[#1c1917] mb-2">{srv.title}</h3>
+
+                    <div className="flex items-center justify-between gap-2 mb-1.5">
+                      <span className="text-[11px] font-semibold text-[#5f8861] uppercase tracking-wider block">
+                        {srv.badge}
+                      </span>
+                      <span className="text-[10px] font-mono text-[#78716c]">
+                        {telemetry}
+                      </span>
+                    </div>
+
+                    <h3 className="text-lg font-bold text-[#1c1917] mb-2 group-hover:text-[#3b563d] transition-colors">
+                      {srv.title}
+                    </h3>
                     <p className="text-xs text-[#57534e] leading-relaxed mb-6">{srv.shortDescription}</p>
                   </div>
+
                   <div>
                     <div className="pt-4 border-t border-[#e7e2d8] flex items-center justify-between text-xs">
-                      <span className="font-semibold text-[#3b563d]">{srv.typicalTimeline}</span>
+                      <span className="font-semibold text-[#3b563d] flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#5f8861]" />
+                        {srv.typicalTimeline}
+                      </span>
                       <Link
                         href={`/services/${srv.id}`}
                         className="text-[#57534e] hover:text-[#1c1917] flex items-center gap-1 font-semibold group-hover:translate-x-1 transition-transform"
@@ -195,11 +231,15 @@ export default async function HomePage() {
       {/* ========================================================= */}
       {/* 3. CASE STUDIES & PORTFOLIO                               */}
       {/* ========================================================= */}
-      <section id="portfolio" className="py-20 lg:py-28 border-b border-[#e7e2d8] bg-[#f7f4ee]">
-        <div className="container-wide">
+      <section id="portfolio" className="py-20 lg:py-28 border-b border-[#e7e2d8] bg-[#f7f4ee] relative">
+        <div className="absolute inset-0 tech-grid-bg opacity-25 pointer-events-none" />
+        <div className="container-wide relative z-10">
           <div className="reveal-item flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
             <div>
-              <span className="sage-badge mb-3">Documented Client Deployments</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e5ede5] text-[#3b563d] text-xs font-mono font-semibold uppercase tracking-wider mb-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#5f8861] animate-pulse" />
+                <span>Documented Client Deployments</span>
+              </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1c1917] tracking-tight">
                 Real architectures. Measured operational impact.
               </h2>
@@ -215,33 +255,56 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {featuredProjects.map((p, idx) => {
               const delayClass = `reveal-delay-${idx + 1}`;
+              const archCode = `ARCH-0${idx + 1} // ${p.category.toUpperCase()}`;
               return (
-                <div key={p.id} className={`reveal-item ${delayClass} natural-card tilt-card p-8 flex flex-col justify-between hover:shadow-[0_16px_36px_rgba(59,86,61,0.1)]`}>
+                <div
+                  key={p.id}
+                  className={`reveal-item ${delayClass} bg-[#ffffff] border border-[#e7e2d8] rounded-2xl p-8 flex flex-col justify-between hover:border-[#5f8861] hover:shadow-[0_18px_40px_rgba(59,86,61,0.12)] transition-all duration-300`}
+                >
                   <div>
-                    <div className="flex items-center justify-between gap-4 mb-4">
-                      <span className="sage-badge text-[11px] py-1">
-                        {p.category}
+                    {/* Header: Architecture classification */}
+                    <div className="flex items-center justify-between gap-4 mb-4 pb-3 border-b border-[#e7e2d8]/70">
+                      <span className="text-[11px] font-mono font-bold text-[#5f8861]">
+                        {archCode}
                       </span>
-                      <span className="text-[11px] font-medium text-[#78716c] px-2.5 py-1 rounded bg-[#ffffff] border border-[#e7e2d8]">
+                      <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[#293a2b] px-2.5 py-0.5 rounded-full bg-[#e5ede5] border border-[#cbdccb]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#5f8861] animate-ping shrink-0" />
                         {p.projectType}
                       </span>
                     </div>
+
                     <h3 className="text-2xl font-bold text-[#1c1917] mb-2">{p.name}</h3>
                     <p className="text-xs font-semibold text-[#5f8861] mb-3">{p.tagline}</p>
                     <p className="text-sm text-[#57534e] leading-relaxed mb-6">{p.problem}</p>
 
-                    <div className="p-4 rounded-xl bg-[#ffffff] border border-[#e7e2d8] mb-6 shadow-inner">
-                      <div className="text-xs font-bold text-[#1c1917] uppercase tracking-wider mb-1">
-                        Key Quantified Outcome
+                    {/* Quantified Outcome Metric Box */}
+                    <div className="p-4 rounded-xl bg-[#f7f4ee] border border-[#cbdccb] mb-6 shadow-inner">
+                      <div className="text-[11px] font-bold text-[#78716c] uppercase tracking-wider mb-1 flex items-center justify-between">
+                        <span>Key Quantified Outcome</span>
+                        <span className="text-[10px] font-mono text-[#5f8861]">VERIFIED AUDIT</span>
                       </div>
-                      <div className="text-base font-extrabold text-[#3b563d]">{p.outcome}</div>
+                      <div className="text-base sm:text-lg font-extrabold text-[#3b563d]">{p.outcome}</div>
                     </div>
 
+                    {/* Architecture Pipeline Preview Strip */}
+                    <div className="mb-6 p-3 rounded-lg bg-[#fdfbf7] border border-[#e7e2d8] flex items-center justify-between text-[11px] font-mono text-[#57534e] overflow-x-auto">
+                      <span className="flex items-center gap-1 text-[#3b563d] font-semibold shrink-0">
+                        <Zap className="w-3 h-3" /> Event Ingest
+                      </span>
+                      <span className="text-[#a7c3a8] px-1 shrink-0">→</span>
+                      <span className="shrink-0">Guardrail Engine</span>
+                      <span className="text-[#a7c3a8] px-1 shrink-0">→</span>
+                      <span className="shrink-0">LLM Reasoning</span>
+                      <span className="text-[#a7c3a8] px-1 shrink-0">→</span>
+                      <span className="text-[#3b563d] font-semibold shrink-0">Zero-Loss Sink</span>
+                    </div>
+
+                    {/* Tech Stack Pills */}
                     <div className="flex flex-wrap gap-2 mb-6">
                       {p.techStack.map((tech) => (
                         <span
                           key={tech}
-                          className="text-[11px] px-2.5 py-1 rounded-md bg-[#e5ede5] text-[#3b563d] font-medium"
+                          className="text-[11px] font-mono px-2.5 py-1 rounded-md bg-[#e5ede5] text-[#3b563d] font-medium"
                         >
                           {tech}
                         </span>
@@ -250,10 +313,13 @@ export default async function HomePage() {
                   </div>
 
                   <div className="pt-4 border-t border-[#e7e2d8] flex items-center justify-between">
-                    <span className="text-xs text-[#78716c]">Verified Client Architecture</span>
+                    <span className="text-xs text-[#78716c] flex items-center gap-1.5">
+                      <ShieldCheck className="w-3.5 h-3.5 text-[#5f8861]" />
+                      Production Architecture
+                    </span>
                     <Link
                       href={`/portfolio/${p.id}`}
-                      className="text-xs font-bold text-[#3b563d] hover:text-[#1c1917] flex items-center gap-1"
+                      className="text-xs font-bold text-[#3b563d] hover:text-[#1c1917] flex items-center gap-1 group-hover:translate-x-1 transition-transform"
                     >
                       Read Technical Breakdown <ChevronRight className="w-3.5 h-3.5" />
                     </Link>
@@ -286,7 +352,7 @@ export default async function HomePage() {
             {reviews.slice(0, 3).map((r, idx) => {
               const delayClass = `reveal-delay-${idx + 1}`;
               return (
-                <div key={r.id} className={`reveal-item ${delayClass} natural-card tilt-card p-6 flex flex-col justify-between hover:shadow-[0_12px_28px_rgba(59,86,61,0.08)]`}>
+                <div key={r.id} className={`reveal-item ${delayClass} bg-[#ffffff] border border-[#e7e2d8] rounded-2xl p-6 flex flex-col justify-between hover:border-[#5f8861] hover:shadow-[0_12px_28px_rgba(59,86,61,0.08)] transition-all duration-300`}>
                   <div>
                     <div className="flex items-center gap-1 mb-4 text-[#5f8861]">
                       {[...Array(r.rating)].map((_, i) => (
@@ -363,34 +429,65 @@ export default async function HomePage() {
       </section>
 
       {/* ========================================================= */}
-      {/* 7. FINAL CALL TO ACTION                                   */}
+      {/* 7. CINEMATIC CLOSING CALL TO ACTION                      */}
       {/* ========================================================= */}
-      <section className="py-20 lg:py-28 bg-[#f4f7f4] border-b border-[#cbdccb]">
-        <div className="container-wide">
+      <section className="relative py-24 lg:py-32 bg-[#121b14] border-t border-[#293a2b] overflow-hidden text-white">
+        {/* Futuristic Technical Grid Watermark */}
+        <div className="absolute inset-0 tech-grid-dark opacity-35 pointer-events-none" />
+
+        {/* Atmospheric Metallic-Sage Core Glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[360px] bg-gradient-to-r from-[#3b563d]/30 via-[#5f8861]/25 to-[#3b563d]/30 blur-[100px] rounded-full pointer-events-none" />
+
+        <div className="container-wide relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <div className="reveal-item">
-              <span className="sage-badge mb-4">Ready to Automate?</span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#1c1917] tracking-tight mb-6">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1b2b1e] border border-[#5f8861]/40 text-[#86c289] text-xs font-mono font-semibold uppercase tracking-wider mb-6 shadow-[0_0_15px_rgba(95,136,97,0.2)]">
+                <span className="w-2 h-2 rounded-full bg-[#86c289] animate-ping" />
+                <span>Production Deployments Open // Q2-Q4</span>
+              </div>
+
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#fdfbf7] tracking-tight mb-6 leading-[1.15]">
                 Ready to turn AI into your unfair advantage?
               </h2>
-              <p className="text-base text-[#57534e] mb-10 leading-relaxed">
-                Schedule a confidential 30-minute discovery call. We will review your current software stack and outline an automation roadmap tailored to your specific budget and timeline.
+              <p className="text-base sm:text-lg text-[#cbdccb] mb-10 leading-relaxed font-normal max-w-2xl mx-auto">
+                Schedule a confidential 30-minute discovery session. We will evaluate your operational stack, map out deterministic guardrails, and outline an automation roadmap tailored to your specific timeline.
               </p>
             </div>
-            <div className="reveal-item reveal-delay-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+
+            <div className="reveal-item reveal-delay-2 flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
               <Link
                 href="/booking"
-                className="btn-sage-primary text-base py-4 px-9 w-full sm:w-auto"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 py-4 px-9 rounded-xl font-semibold text-base bg-[#496d4b] hover:bg-[#5f8861] text-white shadow-[0_0_30px_rgba(95,136,97,0.35)] border border-[#86c289]/50 transition-all duration-300 hover:scale-[1.02]"
               >
                 Build Your AI Workflow
-                <ArrowRight className="w-4 h-4 ml-1" />
+                <ArrowRight className="w-5 h-5 ml-1" />
               </Link>
               <Link
                 href="/contact"
-                className="btn-sage-secondary text-base py-4 px-9 w-full sm:w-auto"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 py-4 px-9 rounded-xl font-semibold text-base bg-[#1a271c] hover:bg-[#233527] text-[#fdfbf7] border border-[#3b563d] transition-all duration-300"
               >
                 Send an RFP / Custom Inquiry
               </Link>
+            </div>
+
+            {/* Futuristic Telemetry Trust Markers */}
+            <div className="reveal-item reveal-delay-3 pt-8 border-t border-[#293a2b] grid grid-cols-2 md:grid-cols-4 gap-4 text-left">
+              <div className="p-3 rounded-lg bg-[#162218]/80 border border-[#2b3e2e]">
+                <span className="text-[10px] font-mono text-[#86c289] uppercase tracking-wider block">Latency</span>
+                <span className="text-xs font-semibold text-[#fdfbf7] mt-0.5 block">&lt;850ms Deterministic</span>
+              </div>
+              <div className="p-3 rounded-lg bg-[#162218]/80 border border-[#2b3e2e]">
+                <span className="text-[10px] font-mono text-[#86c289] uppercase tracking-wider block">Security</span>
+                <span className="text-xs font-semibold text-[#fdfbf7] mt-0.5 block">Zero Vendor Lock-in</span>
+              </div>
+              <div className="p-3 rounded-lg bg-[#162218]/80 border border-[#2b3e2e]">
+                <span className="text-[10px] font-mono text-[#86c289] uppercase tracking-wider block">Architecture</span>
+                <span className="text-xs font-semibold text-[#fdfbf7] mt-0.5 block">Self-Hosted n8n Core</span>
+              </div>
+              <div className="p-3 rounded-lg bg-[#162218]/80 border border-[#2b3e2e]">
+                <span className="text-[10px] font-mono text-[#86c289] uppercase tracking-wider block">Warranty</span>
+                <span className="text-xs font-semibold text-[#fdfbf7] mt-0.5 block">30-Day SLA Included</span>
+              </div>
             </div>
           </div>
         </div>

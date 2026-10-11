@@ -51,3 +51,5 @@ next-env.d.ts
 /public/hero_test_*.png
 /public/cinematic_*.png
 /public/hero_lightning_*.png
+/public/futuristic_*.png
+

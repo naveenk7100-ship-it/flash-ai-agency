@@ -72,17 +72,22 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
         </div>
 
         {/* Hero header */}
-        <div className="natural-card p-8 sm:p-12 mb-12 bg-[#ffffff]">
-          <div className="flex flex-wrap items-center gap-3 mb-6">
-            <span className="sage-badge text-xs">{srv.badge}</span>
-            <span className="text-xs font-medium text-[#78716c] flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5" />
-              Delivery timeline: {srv.typicalTimeline}
+        <div className="bg-[#ffffff] border border-[#e7e2d8] rounded-2xl p-8 sm:p-12 mb-12 shadow-sm hud-bracket">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-[#e7e2d8]/70">
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-mono font-bold text-[#5f8861] bg-[#e5ede5] px-2.5 py-1 rounded">
+                SPEC // {srv.id.toUpperCase()}
+              </span>
+              <span className="sage-badge text-xs">{srv.badge}</span>
+            </div>
+            <span className="text-xs font-mono font-medium text-[#78716c] flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-[#5f8861]" />
+              Timeline: {srv.typicalTimeline}
             </span>
           </div>
 
           <div className="flex items-start gap-4 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-[#e5ede5] flex items-center justify-center text-[#3b563d] shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-[#e5ede5] flex items-center justify-center text-[#3b563d] shrink-0 shadow-sm">
               <Icon className="w-6 h-6" />
             </div>
             <div>
@@ -92,6 +97,26 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
               <p className="text-base text-[#57534e] mt-2 leading-relaxed">
                 {srv.shortDescription}
               </p>
+            </div>
+          </div>
+
+          {/* Technical SLA & Guardrail Bar */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6 p-4 rounded-xl bg-[#f7f4ee] border border-[#e7e2d8] text-xs">
+            <div>
+              <span className="text-[10px] font-mono text-[#78716c] uppercase block">Fault Tolerance</span>
+              <span className="font-bold text-[#1c1917] mt-0.5 block">Sub-Second Failover</span>
+            </div>
+            <div>
+              <span className="text-[10px] font-mono text-[#78716c] uppercase block">Data Loss</span>
+              <span className="font-bold text-[#3b563d] mt-0.5 block">Zero-Loss Guaranteed</span>
+            </div>
+            <div>
+              <span className="text-[10px] font-mono text-[#78716c] uppercase block">Governance</span>
+              <span className="font-bold text-[#1c1917] mt-0.5 block">Human-in-the-Loop</span>
+            </div>
+            <div>
+              <span className="text-[10px] font-mono text-[#78716c] uppercase block">Deployment</span>
+              <span className="font-bold text-[#3b563d] mt-0.5 block">Self-Hosted / Open APIs</span>
             </div>
           </div>
 

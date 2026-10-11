@@ -19,14 +19,14 @@ export function HeroScene3D() {
       return;
     }
 
-    const width = 560;
-    const height = 520;
+    const width = container.clientWidth || 540;
+    const height = container.clientHeight || 500;
 
     // 1. Scene, Camera, Renderer
     const scene = new THREE.Scene();
 
     const camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
-    camera.position.set(0, 0, 11.5);
+    camera.position.set(0, 0, 12.2);
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -67,6 +67,7 @@ export function HeroScene3D() {
 
     // 3. Main FLASH.Ai 3D Brand Energy Sculpture
     const sculptureGroup = new THREE.Group();
+    sculptureGroup.scale.set(0.88, 0.88, 0.88);
     // Set initial natural 3D isometric presentation angle
     sculptureGroup.rotation.y = -0.22;
     sculptureGroup.rotation.x = 0.08;
@@ -384,7 +385,7 @@ export function HeroScene3D() {
   }, []);
 
   return (
-    <div className="relative w-full max-w-[580px] aspect-[5/4] sm:aspect-square mx-auto flex items-center justify-center select-none overflow-hidden sm:overflow-visible">
+    <div className="relative w-full max-w-[500px] lg:max-w-[540px] aspect-[5/4] sm:aspect-square mx-auto flex items-center justify-center select-none overflow-hidden sm:overflow-visible">
       {/* Ambient Warm Sage Halo Behind 3D Brand Sculpture */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none -z-10">
         <div className="w-80 h-80 sm:w-[420px] sm:h-[420px] rounded-full bg-[#cbdccb]/40 blur-3xl animate-pulse-halo" />
