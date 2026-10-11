@@ -3,6 +3,293 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
+// Helper: Generate crisp 2D canvas texture for Websites panel
+function createWebsiteCanvasTexture(): THREE.CanvasTexture {
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 340;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
+
+  // Background card with glass frosting
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, 512, 340);
+
+  // Top browser header
+  ctx.fillStyle = "#f4f7f4";
+  ctx.fillRect(0, 0, 512, 54);
+
+  // Window dots
+  ctx.fillStyle = "#e58e82";
+  ctx.beginPath(); ctx.arc(28, 27, 6, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = "#eed27f";
+  ctx.beginPath(); ctx.arc(48, 27, 6, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = "#86c289";
+  ctx.beginPath(); ctx.arc(68, 27, 6, 0, Math.PI * 2); ctx.fill();
+
+  // URL bar
+  ctx.fillStyle = "#ffffff";
+  ctx.strokeStyle = "#cbdccb";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.roundRect(100, 12, 310, 30, 8);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = "#3b563d";
+  ctx.font = "bold 13px -apple-system, sans-serif";
+  ctx.fillText("🔒 flashai.agency/web", 116, 32);
+
+  // Status tag
+  ctx.fillStyle = "#e5ede5";
+  ctx.beginPath();
+  ctx.roundRect(422, 14, 76, 26, 6);
+  ctx.fill();
+  ctx.fillStyle = "#3b563d";
+  ctx.font = "bold 11px monospace";
+  ctx.fillText("LIVE 99%", 436, 31);
+
+  // Panel Body
+  ctx.strokeStyle = "#e7e2d8";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, 54); ctx.lineTo(512, 54);
+  ctx.stroke();
+
+  // Category Tag
+  ctx.fillStyle = "#5f8861";
+  ctx.font = "bold 12px monospace";
+  ctx.fillText("SYSTEM // HIGH-CONVERSION WEB", 28, 86);
+
+  // Headline Wireframe
+  ctx.fillStyle = "#1c1917";
+  ctx.font = "bold 22px -apple-system, sans-serif";
+  ctx.fillText("Bespoke Web Platforms", 28, 118);
+
+  // Body preview lines
+  ctx.fillStyle = "#78716c";
+  ctx.font = "14px -apple-system, sans-serif";
+  ctx.fillText("Sub-second Core Web Vitals • Next.js 15 App Router", 28, 146);
+
+  // UI mock blocks
+  ctx.fillStyle = "#f7f4ee";
+  ctx.strokeStyle = "#cbdccb";
+  ctx.lineWidth = 1.5;
+
+  // Mock hero banner
+  ctx.beginPath(); ctx.roundRect(28, 168, 270, 110, 10); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = "#3b563d";
+  ctx.font = "bold 12px -apple-system, sans-serif";
+  ctx.fillText("Dynamic Workflow Engine", 46, 204);
+  ctx.fillStyle = "#57534e";
+  ctx.font = "11px -apple-system, sans-serif";
+  ctx.fillText("Deterministic state management", 46, 226);
+  ctx.fillStyle = "#5f8861";
+  ctx.fillText("→ Integrated API Gateway", 46, 246);
+
+  // Metrics Box
+  ctx.fillStyle = "#e5ede5";
+  ctx.beginPath(); ctx.roundRect(314, 168, 170, 110, 10); ctx.fill();
+  ctx.strokeStyle = "#cbdccb"; ctx.stroke();
+
+  ctx.fillStyle = "#78716c";
+  ctx.font = "bold 11px monospace";
+  ctx.fillText("PERFORMANCE", 330, 196);
+  ctx.fillStyle = "#3b563d";
+  ctx.font = "extrabold 32px monospace";
+  ctx.fillText("99/100", 330, 236);
+  ctx.fillStyle = "#5f8861";
+  ctx.font = "bold 11px -apple-system, sans-serif";
+  ctx.fillText("● Zero Layout Shift", 330, 260);
+
+  // Border frame
+  ctx.strokeStyle = "#cbdccb";
+  ctx.lineWidth = 3;
+  ctx.strokeRect(1, 1, 510, 338);
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.anisotropy = 4;
+  return tex;
+}
+
+// Helper: Generate crisp 2D canvas texture for Instagram Automation panel
+function createInstagramCanvasTexture(): THREE.CanvasTexture {
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 340;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
+
+  // Background card
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, 512, 340);
+
+  // Header
+  ctx.fillStyle = "#f4f7f4";
+  ctx.fillRect(0, 0, 512, 54);
+
+  // Instagram Icon / Badge
+  ctx.fillStyle = "#d85a6a";
+  ctx.beginPath(); ctx.roundRect(24, 12, 30, 30, 8); ctx.fill();
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 16px -apple-system, sans-serif";
+  ctx.fillText("📸", 29, 33);
+
+  ctx.fillStyle = "#1c1917";
+  ctx.font = "bold 14px -apple-system, sans-serif";
+  ctx.fillText("@client_brand", 64, 30);
+  ctx.fillStyle = "#78716c";
+  ctx.font = "11px -apple-system, sans-serif";
+  ctx.fillText("Instagram Publishing Pipeline", 64, 45);
+
+  // Live status badge
+  ctx.fillStyle = "#e5ede5";
+  ctx.beginPath(); ctx.roundRect(386, 14, 102, 26, 6); ctx.fill();
+  ctx.fillStyle = "#3b563d";
+  ctx.font = "bold 11px monospace";
+  ctx.fillText("● AUTO-SYNC", 400, 31);
+
+  // Divider
+  ctx.strokeStyle = "#e7e2d8";
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, 54); ctx.lineTo(512, 54); ctx.stroke();
+
+  // Content
+  ctx.fillStyle = "#5f8861";
+  ctx.font = "bold 12px monospace";
+  ctx.fillText("SOCIAL AUTOMATION // GRAPH API", 28, 86);
+
+  ctx.fillStyle = "#1c1917";
+  ctx.font = "bold 20px -apple-system, sans-serif";
+  ctx.fillText("Autonomous Content Pipeline", 28, 116);
+
+  // Pipeline Workflow Grid
+  ctx.fillStyle = "#f7f4ee";
+  ctx.strokeStyle = "#cbdccb";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.roundRect(28, 142, 456, 76, 10); ctx.fill(); ctx.stroke();
+
+  // Pipeline Steps inside
+  ctx.fillStyle = "#3b563d";
+  ctx.font = "bold 12px monospace";
+  ctx.fillText("TRIGGER: Calendar → AI Asset Gen → Human Sign-off → Scheduled Post", 42, 172);
+
+  ctx.fillStyle = "#78716c";
+  ctx.font = "12px -apple-system, sans-serif";
+  ctx.fillText("Scheduled: 09:00 AM Today • Meta Verified Webhook", 42, 198);
+
+  // Metrics Row
+  ctx.fillStyle = "#e5ede5";
+  ctx.beginPath(); ctx.roundRect(28, 234, 218, 76, 8); ctx.fill();
+  ctx.strokeStyle = "#cbdccb"; ctx.stroke();
+  ctx.fillStyle = "#78716c";
+  ctx.font = "bold 10px monospace";
+  ctx.fillText("CYCLE TIME SAVED", 42, 258);
+  ctx.fillStyle = "#3b563d";
+  ctx.font = "bold 22px monospace";
+  ctx.fillText("18h → 3h / wk", 42, 288);
+
+  ctx.fillStyle = "#e5ede5";
+  ctx.beginPath(); ctx.roundRect(266, 234, 218, 76, 8); ctx.fill();
+  ctx.strokeStyle = "#cbdccb"; ctx.stroke();
+  ctx.fillStyle = "#78716c";
+  ctx.font = "bold 10px monospace";
+  ctx.fillText("PUBLISH RELIABILITY", 280, 258);
+  ctx.fillStyle = "#3b563d";
+  ctx.font = "bold 22px monospace";
+  ctx.fillText("100% Zero-Loss", 280, 288);
+
+  // Border frame
+  ctx.strokeStyle = "#cbdccb";
+  ctx.lineWidth = 3;
+  ctx.strokeRect(1, 1, 510, 338);
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.anisotropy = 4;
+  return tex;
+}
+
+// Helper: Generate crisp 2D canvas texture for AI Agents panel
+function createAgentCanvasTexture(): THREE.CanvasTexture {
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 340;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return new THREE.CanvasTexture(canvas);
+
+  // Background card
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, 512, 340);
+
+  // Header
+  ctx.fillStyle = "#f4f7f4";
+  ctx.fillRect(0, 0, 512, 54);
+
+  // Terminal Bot Icon
+  ctx.fillStyle = "#3b563d";
+  ctx.beginPath(); ctx.roundRect(24, 12, 30, 30, 8); ctx.fill();
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 16px -apple-system, sans-serif";
+  ctx.fillText("⚡", 31, 33);
+
+  ctx.fillStyle = "#1c1917";
+  ctx.font = "bold 14px -apple-system, sans-serif";
+  ctx.fillText("Autonomous Agent Router", 64, 30);
+  ctx.fillStyle = "#78716c";
+  ctx.font = "11px monospace";
+  ctx.fillText("Deterministic Schema Guard", 64, 45);
+
+  // Latency badge
+  ctx.fillStyle = "#e5ede5";
+  ctx.beginPath(); ctx.roundRect(390, 14, 98, 26, 6); ctx.fill();
+  ctx.fillStyle = "#3b563d";
+  ctx.font = "bold 11px monospace";
+  ctx.fillText("< 850ms SLA", 404, 31);
+
+  // Divider
+  ctx.strokeStyle = "#e7e2d8";
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, 54); ctx.lineTo(512, 54); ctx.stroke();
+
+  // Content
+  ctx.fillStyle = "#5f8861";
+  ctx.font = "bold 12px monospace";
+  ctx.fillText("ENGINEERING // MULTI-AGENT ORCHESTRATION", 28, 86);
+
+  ctx.fillStyle = "#1c1917";
+  ctx.font = "bold 20px -apple-system, sans-serif";
+  ctx.fillText("Self-Healing n8n & API Pipelines", 28, 116);
+
+  // Code / Execution block
+  ctx.fillStyle = "#1c1917";
+  ctx.beginPath(); ctx.roundRect(28, 138, 456, 108, 10); ctx.fill();
+
+  ctx.fillStyle = "#86c289";
+  ctx.font = "bold 12px monospace";
+  ctx.fillText("$ agent.route({ intent: 'lead_qualification' })", 44, 168);
+  ctx.fillStyle = "#cbdccb";
+  ctx.font = "11px monospace";
+  ctx.fillText("✔ RAG Context Ingest: Vector Store Grounded", 44, 192);
+  ctx.fillText("✔ JSON Schema: 100% Strict Type Pass", 44, 212);
+  ctx.fillText("✔ Dual Dead-Letter Failover: Active", 44, 232);
+
+  // Bottom tags
+  ctx.fillStyle = "#f4f7f4";
+  ctx.beginPath(); ctx.roundRect(28, 260, 456, 50, 8); ctx.fill();
+  ctx.fillStyle = "#3b563d";
+  ctx.font = "bold 12px monospace";
+  ctx.fillText("ZERO DATA LOSS • HUMAN-IN-THE-LOOP REVIEWS", 52, 290);
+
+  // Border frame
+  ctx.strokeStyle = "#cbdccb";
+  ctx.lineWidth = 3;
+  ctx.strokeRect(1, 1, 510, 338);
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.anisotropy = 4;
+  return tex;
+}
+
 export function HeroScene3D() {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -12,8 +299,8 @@ export function HeroScene3D() {
 
     // Check WebGL availability safely
     try {
-      const canvas = document.createElement("canvas");
-      const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+      const testCanvas = document.createElement("canvas");
+      const gl = testCanvas.getContext("webgl2") || testCanvas.getContext("webgl");
       if (!gl) return;
     } catch {
       return;
@@ -25,8 +312,8 @@ export function HeroScene3D() {
     // 1. Scene, Camera, Renderer
     const scene = new THREE.Scene();
 
-    const camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
-    camera.position.set(0, 0, 12.2);
+    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
+    camera.position.set(0, 0, 13.8);
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -37,98 +324,93 @@ export function HeroScene3D() {
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.25;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
     container.appendChild(renderer.domElement);
 
-    // 2. Sophisticated Studio Lighting Rig
-    const ambientLight = new THREE.AmbientLight(0xfdfbf7, 1.7);
+    // 2. Studio Lighting Rig
+    const ambientLight = new THREE.AmbientLight(0xfdfbf7, 1.8);
     scene.add(ambientLight);
 
-    // Key Light: Sharp specular reflections on metallic facets
-    const keyLight = new THREE.DirectionalLight(0xffffff, 3.4);
-    keyLight.position.set(6, 8, 7);
-    keyLight.castShadow = true;
+    const keyLight = new THREE.DirectionalLight(0xffffff, 3.2);
+    keyLight.position.set(7, 9, 8);
     scene.add(keyLight);
 
-    // Sage Fill Light: Soft natural green illumination
-    const sageFill = new THREE.PointLight(0x5f8861, 36, 25);
-    sageFill.position.set(-6, -4, 5);
+    const sageFill = new THREE.PointLight(0x5f8861, 38, 30);
+    sageFill.position.set(-7, -4, 6);
     scene.add(sageFill);
 
-    // Metallic Specular Rim: Edge crispness
-    const rimLight = new THREE.DirectionalLight(0xa7c3a8, 2.2);
-    rimLight.position.set(-5, 6, -5);
+    const rimLight = new THREE.DirectionalLight(0xa7c3a8, 2.4);
+    rimLight.position.set(-6, 6, -6);
     scene.add(rimLight);
 
-    const bottomReflect = new THREE.PointLight(0xcbdccb, 20, 20);
-    bottomReflect.position.set(4, -5, 3);
+    const bottomReflect = new THREE.PointLight(0xcbdccb, 22, 22);
+    bottomReflect.position.set(4, -5, 4);
     scene.add(bottomReflect);
 
-    // 3. Main FLASH.Ai 3D Brand Energy Sculpture
-    const sculptureGroup = new THREE.Group();
-    sculptureGroup.scale.set(0.88, 0.88, 0.88);
-    // Set initial natural 3D isometric presentation angle
-    sculptureGroup.rotation.y = -0.22;
-    sculptureGroup.rotation.x = 0.08;
-    scene.add(sculptureGroup);
+    // 3. Main Master Scene Group (Isometric presentation)
+    const masterGroup = new THREE.Group();
+    masterGroup.rotation.y = -0.15;
+    masterGroup.rotation.x = 0.08;
+    scene.add(masterGroup);
 
-    // Create 2D Lightning Polygon Shape from authentic FLASH logo coordinates
+    // =========================================================
+    // A. CENTRAL INTELLIGENT WORKFLOW CORE (FLASH.Ai Brand Node)
+    // =========================================================
+    const coreGroup = new THREE.Group();
+    masterGroup.add(coreGroup);
+
+    // Lightning polygon coordinate definition from authentic brand logo
     const boltShape = new THREE.Shape();
-    boltShape.moveTo(-2.08, 3.67);   // 1. Top-left start
-    boltShape.lineTo(2.73, 3.67);    // 2. Top-right horizontal
-    boltShape.lineTo(1.48, 1.92);    // 3. Right inner corner
-    boltShape.lineTo(3.38, 1.92);    // 4. Right step outer
-    boltShape.lineTo(0.57, -3.73);   // 5. Bottom lightning tip
-    boltShape.lineTo(0.23, -1.90);   // 6. Vertical inner notch
-    boltShape.lineTo(-2.03, -1.90);  // 7. Left lower step
-    boltShape.lineTo(-0.78, 0.22);   // 8. Left middle inner corner
-    boltShape.lineTo(-3.55, 0.22);   // 9. Left middle step outer
-    boltShape.lineTo(-2.08, 3.67);   // Back to top-left start
+    boltShape.moveTo(-1.66, 2.94);
+    boltShape.lineTo(2.18, 2.94);
+    boltShape.lineTo(1.18, 1.54);
+    boltShape.lineTo(2.70, 1.54);
+    boltShape.lineTo(0.46, -2.98);
+    boltShape.lineTo(0.18, -1.52);
+    boltShape.lineTo(-1.62, -1.52);
+    boltShape.lineTo(-0.62, 0.18);
+    boltShape.lineTo(-2.84, 0.18);
+    boltShape.lineTo(-1.66, 2.94);
 
-    // Extrusion settings with refined metallic beveling
-    const extrudeSettings: THREE.ExtrudeGeometryOptions = {
-      depth: 0.38,
+    const boltGeo = new THREE.ExtrudeGeometry(boltShape, {
+      depth: 0.35,
       bevelEnabled: true,
-      bevelSegments: 5,
-      steps: 1,
-      bevelSize: 0.07,
-      bevelThickness: 0.07
-    };
-
-    const boltGeo = new THREE.ExtrudeGeometry(boltShape, extrudeSettings);
+      bevelSegments: 4,
+      bevelSize: 0.06,
+      bevelThickness: 0.06
+    });
     boltGeo.center();
 
-    // Primary Metallic Material: Polished Chrome with Deep Sage Sheen
+    // Metallic polished chrome sage material
     const chromeSageMat = new THREE.MeshStandardMaterial({
       color: 0x3b563d,
-      emissive: 0x223524,
-      emissiveIntensity: 0.35,
+      emissive: 0x243826,
+      emissiveIntensity: 0.45,
       metalness: 0.94,
       roughness: 0.14
     });
 
     const boltMesh = new THREE.Mesh(boltGeo, chromeSageMat);
     boltMesh.castShadow = true;
-    boltMesh.receiveShadow = true;
-    sculptureGroup.add(boltMesh);
+    coreGroup.add(boltMesh);
 
-    // Edge Accent Glow Lines highlighting the precise geometric bevels
+    // Precise edge lines highlighting core geometry
     const edgesGeo = new THREE.EdgesGeometry(boltGeo, 24);
     const edgesMat = new THREE.LineBasicMaterial({
       color: 0x86c289,
       transparent: true,
-      opacity: 0.75
+      opacity: 0.85
     });
     const edgesLines = new THREE.LineSegments(edgesGeo, edgesMat);
-    sculptureGroup.add(edgesLines);
+    coreGroup.add(edgesLines);
 
-    // Layer 2: Inner Floating Luminous Core Plate (Offset front)
+    // Inner Luminous Core Plate (Offset front)
     const innerBoltGeo = new THREE.ExtrudeGeometry(boltShape, {
       depth: 0.08,
       bevelEnabled: true,
-      bevelSegments: 3,
+      bevelSegments: 2,
       bevelSize: 0.03,
       bevelThickness: 0.03
     });
@@ -137,64 +419,152 @@ export function HeroScene3D() {
     const innerLuminousMat = new THREE.MeshStandardMaterial({
       color: 0x5f8861,
       emissive: 0x496d4b,
-      emissiveIntensity: 0.65,
+      emissiveIntensity: 0.7,
       metalness: 0.88,
       roughness: 0.16
     });
 
     const innerMeshFront = new THREE.Mesh(innerBoltGeo, innerLuminousMat);
-    innerMeshFront.position.z = 0.28;
+    innerMeshFront.position.z = 0.26;
     innerMeshFront.scale.set(0.78, 0.78, 0.78);
-    sculptureGroup.add(innerMeshFront);
+    coreGroup.add(innerMeshFront);
 
-    // Layer 3: Sleek Titanium Backplate Layer
-    const backMesh = new THREE.Mesh(innerBoltGeo, new THREE.MeshStandardMaterial({
-      color: 0x223024,
-      metalness: 0.95,
-      roughness: 0.2
-    }));
-    backMesh.position.z = -0.28;
-    backMesh.scale.set(0.85, 0.85, 0.85);
-    sculptureGroup.add(backMesh);
-
-    // 4. Concentric Orbital Metallic Rings
-    const ring1Geo = new THREE.TorusGeometry(3.3, 0.022, 16, 120);
-    const ring1Mat = new THREE.MeshStandardMaterial({
-      color: 0x5f8861,
-      metalness: 0.9,
-      roughness: 0.16
-    });
-    const ring1 = new THREE.Mesh(ring1Geo, ring1Mat);
-    ring1.rotation.x = Math.PI / 3.2;
-    ring1.rotation.y = Math.PI / 7;
-    sculptureGroup.add(ring1);
-
-    const ring2Geo = new THREE.TorusGeometry(3.8, 0.016, 16, 120);
-    const ring2Mat = new THREE.MeshStandardMaterial({
-      color: 0x3b563d,
-      metalness: 0.95,
-      roughness: 0.12
-    });
-    const ring2 = new THREE.Mesh(ring2Geo, ring2Mat);
-    ring2.rotation.x = -Math.PI / 3.6;
-    ring2.rotation.y = Math.PI / 2.6;
-    sculptureGroup.add(ring2);
-
-    // Orbiting Satellite Spheres on Rings
-    const sphereMat = new THREE.MeshStandardMaterial({
-      color: 0x5f8861,
-      emissive: 0x3b563d,
-      emissiveIntensity: 0.5,
+    // Central Hexagonal Processing Ring Housing
+    const hexHousingGeo = new THREE.CylinderGeometry(2.35, 2.35, 0.15, 6, 1, false);
+    const hexHousingMat = new THREE.MeshStandardMaterial({
+      color: 0x1f2e21,
       metalness: 0.92,
-      roughness: 0.18
+      roughness: 0.22,
+      transparent: true,
+      opacity: 0.7
     });
-    const sat1 = new THREE.Mesh(new THREE.SphereGeometry(0.12, 20, 20), sphereMat);
-    const sat2 = new THREE.Mesh(new THREE.SphereGeometry(0.09, 20, 20), sphereMat);
-    sculptureGroup.add(sat1);
-    sculptureGroup.add(sat2);
+    const hexHousing = new THREE.Mesh(hexHousingGeo, hexHousingMat);
+    hexHousing.rotation.x = Math.PI / 2;
+    hexHousing.position.z = -0.25;
+    coreGroup.add(hexHousing);
 
-    // 5. Atmospheric Floating Micro-Particles
-    const particleCount = 130;
+    // Hex housing edges
+    const hexEdges = new THREE.LineSegments(
+      new THREE.EdgesGeometry(hexHousingGeo),
+      new THREE.LineBasicMaterial({ color: 0x5f8861, opacity: 0.65, transparent: true })
+    );
+    hexEdges.rotation.x = Math.PI / 2;
+    hexEdges.position.z = -0.25;
+    coreGroup.add(hexEdges);
+
+    // =========================================================
+    // B. THREE CONNECTED FLOATING GLASS PANELS (WORK-RELEVANT)
+    // =========================================================
+    const panelMatCommon = {
+      transparent: true,
+      opacity: 0.94,
+      roughness: 0.18,
+      metalness: 0.12,
+      side: THREE.DoubleSide
+    };
+
+    const panelGeo = new THREE.PlaneGeometry(3.1, 2.05);
+
+    // 1. Websites & Web Platforms Panel (Top-Left / Forefront)
+    const webTex = createWebsiteCanvasTexture();
+    const webMat = new THREE.MeshStandardMaterial({
+      map: webTex,
+      ...panelMatCommon
+    });
+    const webPanel = new THREE.Mesh(panelGeo, webMat);
+    webPanel.position.set(-3.3, 1.8, 0.8);
+    webPanel.rotation.y = 0.24;
+    webPanel.rotation.x = -0.06;
+    masterGroup.add(webPanel);
+
+    // 2. Instagram & Social Automation Panel (Right-Middle)
+    const igTex = createInstagramCanvasTexture();
+    const igMat = new THREE.MeshStandardMaterial({
+      map: igTex,
+      ...panelMatCommon
+    });
+    const igPanel = new THREE.Mesh(panelGeo, igMat);
+    igPanel.position.set(3.4, 0.7, 0.5);
+    igPanel.rotation.y = -0.28;
+    igPanel.rotation.x = 0.04;
+    masterGroup.add(igPanel);
+
+    // 3. AI Agents & Autonomous Pipelines Panel (Bottom-Left / Midground)
+    const agentTex = createAgentCanvasTexture();
+    const agentMat = new THREE.MeshStandardMaterial({
+      map: agentTex,
+      ...panelMatCommon
+    });
+    const agentPanel = new THREE.Mesh(panelGeo, agentMat);
+    agentPanel.position.set(-3.0, -1.9, 0.6);
+    agentPanel.rotation.y = 0.22;
+    agentPanel.rotation.x = 0.08;
+    masterGroup.add(agentPanel);
+
+    // =========================================================
+    // C. 3D CURVED DATA SPLINE PATHS & MOVING DATA PACKETS
+    // =========================================================
+    // Spline 1: Core -> Websites Panel
+    const curveWeb = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0, 0.4, 0),
+      new THREE.Vector3(-1.4, 1.0, 0.3),
+      new THREE.Vector3(-2.4, 1.6, 0.6),
+      new THREE.Vector3(-3.1, 1.8, 0.8)
+    ]);
+
+    // Spline 2: Core -> Instagram Panel
+    const curveIg = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0.5, 0, 0),
+      new THREE.Vector3(1.6, 0.3, 0.2),
+      new THREE.Vector3(2.5, 0.5, 0.4),
+      new THREE.Vector3(3.2, 0.7, 0.5)
+    ]);
+
+    // Spline 3: Core -> AI Agents Panel
+    const curveAgent = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-0.3, -0.6, 0),
+      new THREE.Vector3(-1.2, -1.2, 0.2),
+      new THREE.Vector3(-2.1, -1.6, 0.4),
+      new THREE.Vector3(-2.8, -1.9, 0.6)
+    ]);
+
+    const splineMat = new THREE.LineBasicMaterial({
+      color: 0x86c289,
+      transparent: true,
+      opacity: 0.65,
+      linewidth: 2
+    });
+
+    const createSplineLine = (curve: THREE.CatmullRomCurve3) => {
+      const points = curve.getPoints(50);
+      const geom = new THREE.BufferGeometry().setFromPoints(points);
+      return new THREE.Line(geom, splineMat);
+    };
+
+    masterGroup.add(createSplineLine(curveWeb));
+    masterGroup.add(createSplineLine(curveIg));
+    masterGroup.add(createSplineLine(curveAgent));
+
+    // Moving Data Packet Spheres along each curve
+    const packetGeo = new THREE.SphereGeometry(0.09, 16, 16);
+    const packetMat = new THREE.MeshStandardMaterial({
+      color: 0x86c289,
+      emissive: 0x5f8861,
+      emissiveIntensity: 1.0,
+      metalness: 0.5,
+      roughness: 0.2
+    });
+
+    const webPackets = [new THREE.Mesh(packetGeo, packetMat), new THREE.Mesh(packetGeo, packetMat)];
+    const igPackets = [new THREE.Mesh(packetGeo, packetMat), new THREE.Mesh(packetGeo, packetMat)];
+    const agentPackets = [new THREE.Mesh(packetGeo, packetMat), new THREE.Mesh(packetGeo, packetMat)];
+
+    [...webPackets, ...igPackets, ...agentPackets].forEach((p) => masterGroup.add(p));
+
+    // =========================================================
+    // D. ATMOSPHERIC FLOATING DATA PARTICLES
+    // =========================================================
+    const particleCount = 140;
     const particleGeo = new THREE.BufferGeometry();
     const particlePositions = new Float32Array(particleCount * 3);
     const particleColors = new Float32Array(particleCount * 3);
@@ -206,11 +576,11 @@ export function HeroScene3D() {
     for (let i = 0; i < particleCount; i++) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(Math.random() * 2 - 1);
-      const r = 2.2 + Math.random() * 2.5;
+      const r = 2.0 + Math.random() * 3.8;
 
       particlePositions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      particlePositions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-      particlePositions[i * 3 + 2] = r * Math.cos(phi);
+      particlePositions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta) * 0.75;
+      particlePositions[i * 3 + 2] = r * Math.cos(phi) * 0.8;
 
       const col = i % 3 === 0 ? cSage : i % 2 === 0 ? cDeep : cIvory;
       particleColors[i * 3] = col.r;
@@ -222,46 +592,21 @@ export function HeroScene3D() {
     particleGeo.setAttribute("color", new THREE.BufferAttribute(particleColors, 3));
 
     const particleMat = new THREE.PointsMaterial({
-      size: 0.065,
+      size: 0.055,
       vertexColors: true,
       transparent: true,
-      opacity: 0.65
+      opacity: 0.7
     });
     const particles = new THREE.Points(particleGeo, particleMat);
-    sculptureGroup.add(particles);
+    masterGroup.add(particles);
 
-    // 6. Contact Shadow Beneath Sculpture
-    const shadowGeo = new THREE.PlaneGeometry(6.5, 6.5);
-    const shadowCanvas = document.createElement("canvas");
-    shadowCanvas.width = 128;
-    shadowCanvas.height = 128;
-    const ctx = shadowCanvas.getContext("2d");
-    if (ctx) {
-      const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-      grad.addColorStop(0, "rgba(59, 86, 61, 0.16)");
-      grad.addColorStop(0.5, "rgba(59, 86, 61, 0.05)");
-      grad.addColorStop(1, "rgba(59, 86, 61, 0)");
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 128, 128);
-    }
-    const shadowTex = new THREE.CanvasTexture(shadowCanvas);
-    const shadowMat = new THREE.MeshBasicMaterial({
-      map: shadowTex,
-      transparent: true,
-      opacity: 0.85,
-      depthWrite: false
-    });
-    const shadowPlane = new THREE.Mesh(shadowGeo, shadowMat);
-    shadowPlane.rotation.x = -Math.PI / 2;
-    shadowPlane.position.y = -3.4;
-    scene.add(shadowPlane);
-
-    // 7. Interactive Mouse Parallax & Scroll Integration
+    // =========================================================
+    // E. INTERACTIVE MOUSE PARALLAX & CONTINUOUS ANIMATION LOOP
+    // =========================================================
     let mouseX = 0;
     let mouseY = 0;
-    let baseRotationY = -0.22;
+    let baseRotationY = -0.15;
     let scrollProgress = 0;
-    let isVisible = true;
 
     const handleMouseMove = (e: MouseEvent) => {
       const rect = container.getBoundingClientRect();
@@ -281,60 +626,66 @@ export function HeroScene3D() {
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
     window.addEventListener("scroll", handleScroll, { passive: true });
 
-    // Perform immediate initial render so canvas is never blank
+    // Render immediately
     renderer.render(scene, camera);
 
-    // Respect reduced motion settings gracefully without freezing the scene completely
     const prefersReducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const motionScale = prefersReducedMotion ? 0.45 : 1.0;
+    const motionScale = prefersReducedMotion ? 0.4 : 1.0;
 
-    // 8. Continuous Render Loop with Real, Visible, Fluid Motion
     let animationFrameId: number;
     const startTime = performance.now();
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
 
-      // Only pause when scrolled deeply past the hero section (>1200px)
-      if (typeof window !== "undefined" && window.scrollY > 1200) {
+      if (typeof window !== "undefined" && window.scrollY > 1300) {
         return;
       }
 
       const elapsedTime = (performance.now() - startTime) * 0.001;
 
-      // 1. Ambient rotation & pointer parallax
-      const ambientY = Math.sin(elapsedTime * 0.7) * 0.22 * motionScale;
-      const ambientX = Math.cos(elapsedTime * 0.9) * 0.08 * motionScale;
-      const scrollRotation = scrollProgress * 0.85;
-      const scrollTilt = (scrollProgress - 0.5) * 0.35;
+      // 1. Scene Parallax and Natural Ambient Oscillation
+      const ambientY = Math.sin(elapsedTime * 0.6) * 0.16 * motionScale;
+      const ambientX = Math.cos(elapsedTime * 0.8) * 0.06 * motionScale;
+      const scrollRotation = scrollProgress * 0.75;
+      const scrollTilt = (scrollProgress - 0.5) * 0.28;
 
-      sculptureGroup.rotation.y += (baseRotationY + ambientY + scrollRotation + mouseX - sculptureGroup.rotation.y) * 0.06;
-      sculptureGroup.rotation.x += (0.08 + ambientX + mouseY * 0.35 + scrollTilt - sculptureGroup.rotation.x) * 0.06;
+      masterGroup.rotation.y += (baseRotationY + ambientY + scrollRotation + mouseX - masterGroup.rotation.y) * 0.05;
+      masterGroup.rotation.x += (0.08 + ambientX + mouseY * 0.35 + scrollTilt - masterGroup.rotation.x) * 0.05;
 
-      // 2. Visible levitation float on the 3D lightning sculpture (~15px visible floating height)
-      const floatY = Math.sin(elapsedTime * 1.8) * 0.22 * motionScale;
-      boltMesh.position.y = floatY;
-      innerMeshFront.position.y = floatY;
-      backMesh.position.y = floatY;
-      edgesLines.position.y = floatY;
+      // 2. Central Core Floating Levitation and Energy Pulse
+      const coreFloatY = Math.sin(elapsedTime * 1.8) * 0.18 * motionScale;
+      coreGroup.position.y = coreFloatY;
+      innerLuminousMat.emissiveIntensity = 0.55 + Math.sin(elapsedTime * 2.4) * 0.2 * motionScale;
 
-      // 3. Dynamic energy breathing pulse on the inner luminous core plate
-      innerLuminousMat.emissiveIntensity = 0.55 + Math.sin(elapsedTime * 2.4) * 0.22 * motionScale;
+      // 3. Floating Glass Panels Gentle Phased Levitation
+      webPanel.position.y = 1.8 + Math.sin(elapsedTime * 1.5 + 0.5) * 0.12 * motionScale;
+      webPanel.rotation.z = Math.sin(elapsedTime * 1.2) * 0.02 * motionScale;
 
-      // 4. Orbital rings continuous visible 3D rotation
-      ring1.rotation.z = elapsedTime * 0.45 * motionScale;
-      ring2.rotation.z = -elapsedTime * 0.35 * motionScale;
+      igPanel.position.y = 0.7 + Math.sin(elapsedTime * 1.6 + 2.0) * 0.14 * motionScale;
+      igPanel.rotation.z = Math.cos(elapsedTime * 1.3) * 0.02 * motionScale;
 
-      // 5. Orbiting satellite spheres along their 3D orbital planes
-      const sat1Angle = elapsedTime * 0.9 * motionScale;
-      sat1.position.set(Math.cos(sat1Angle) * 3.3, Math.sin(sat1Angle) * 1.5, Math.sin(sat1Angle) * 2.2);
+      agentPanel.position.y = -1.9 + Math.sin(elapsedTime * 1.4 + 3.8) * 0.12 * motionScale;
+      agentPanel.rotation.z = Math.sin(elapsedTime * 1.1) * 0.02 * motionScale;
 
-      const sat2Angle = (-elapsedTime * 0.75 + 2.0) * motionScale;
-      sat2.position.set(Math.cos(sat2Angle) * 2.8, -Math.sin(sat2Angle) * 2.2, Math.cos(sat2Angle) * 2.4);
+      // 4. Data Packets Movement along Curves
+      const t1 = (elapsedTime * 0.45) % 1.0;
+      const t1b = (elapsedTime * 0.45 + 0.5) % 1.0;
+      webPackets[0].position.copy(curveWeb.getPoint(t1));
+      webPackets[1].position.copy(curveWeb.getPoint(t1b));
 
-      // 6. Atmospheric micro-particles dynamic 3D swirl and drift
-      particles.rotation.y = elapsedTime * 0.12 * motionScale;
-      particles.rotation.x = Math.sin(elapsedTime * 0.5) * 0.06 * motionScale;
+      const t2 = (elapsedTime * 0.42 + 0.2) % 1.0;
+      const t2b = (elapsedTime * 0.42 + 0.7) % 1.0;
+      igPackets[0].position.copy(curveIg.getPoint(t2));
+      igPackets[1].position.copy(curveIg.getPoint(t2b));
+
+      const t3 = (elapsedTime * 0.48 + 0.35) % 1.0;
+      const t3b = (elapsedTime * 0.48 + 0.85) % 1.0;
+      agentPackets[0].position.copy(curveAgent.getPoint(t3));
+      agentPackets[1].position.copy(curveAgent.getPoint(t3b));
+
+      // 5. Atmospheric Data Particles Swirl
+      particles.rotation.y = elapsedTime * 0.08 * motionScale;
 
       renderer.render(scene, camera);
 
@@ -342,19 +693,18 @@ export function HeroScene3D() {
         (window as any).__FLASH_HERO__ = {
           frameCount: (((window as any).__FLASH_HERO__?.frameCount) || 0) + 1,
           elapsedTime,
-          sculptureRotationY: sculptureGroup.rotation.y,
-          sculptureRotationX: sculptureGroup.rotation.x,
-          ring1Z: ring1.rotation.z,
-          ring2Z: ring2.rotation.z,
-          boltY: boltMesh.position.y,
-          particleRotY: particles.rotation.y
+          masterRotationY: masterGroup.rotation.y,
+          coreFloatY,
+          webPanelY: webPanel.position.y,
+          igPanelY: igPanel.position.y,
+          agentPanelY: agentPanel.position.y
         };
       }
     };
 
     animate();
 
-    // 9. Resize Observer
+    // Resize Observer
     const handleResize = () => {
       if (!container) return;
       const w = container.clientWidth;
@@ -382,27 +732,21 @@ export function HeroScene3D() {
       boltGeo.dispose();
       innerBoltGeo.dispose();
       edgesGeo.dispose();
-      chromeSageMat.dispose();
-      innerLuminousMat.dispose();
-      edgesMat.dispose();
-      ring1Geo.dispose();
-      ring1Mat.dispose();
-      ring2Geo.dispose();
-      ring2Mat.dispose();
-      sphereMat.dispose();
+      hexHousingGeo.dispose();
+      panelGeo.dispose();
+      packetGeo.dispose();
       particleGeo.dispose();
-      particleMat.dispose();
-      shadowGeo.dispose();
-      shadowMat.dispose();
-      shadowTex.dispose();
+      webTex.dispose();
+      igTex.dispose();
+      agentTex.dispose();
     };
   }, []);
 
   return (
-    <div className="relative w-full max-w-[500px] lg:max-w-[540px] aspect-[5/4] sm:aspect-square mx-auto flex items-center justify-center select-none overflow-hidden sm:overflow-visible">
-      {/* Ambient Warm Sage Halo Behind 3D Brand Sculpture */}
+    <div className="relative w-full max-w-[540px] lg:max-w-[620px] aspect-[5/4] sm:aspect-square mx-auto flex items-center justify-center select-none overflow-hidden sm:overflow-visible">
+      {/* Ambient Warm Sage Halo Behind 3D Workflow Ecosystem */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none -z-10">
-        <div className="w-80 h-80 sm:w-[420px] sm:h-[420px] rounded-full bg-[#cbdccb]/40 blur-3xl animate-pulse-halo" />
+        <div className="w-80 h-80 sm:w-[460px] sm:h-[460px] rounded-full bg-[#cbdccb]/45 blur-3xl animate-pulse-halo" />
         <div className="w-64 h-64 rounded-full bg-[#e5ede5]/60 blur-2xl" />
       </div>
 

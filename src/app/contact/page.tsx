@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, Send, CheckCircle2, AlertCircle, Phone, MapPin, Globe } from "lucide-react";
+import { Mail, Send, CheckCircle2, AlertCircle, Phone, MapPin, Globe, MessageSquare } from "lucide-react";
+import { WHATSAPP_CONTACTS } from "@/lib/config";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -75,6 +76,95 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           {/* Left Column: Direct details */}
           <div className="lg:col-span-5 space-y-6">
+            {/* Dedicated WhatsApp Support Card */}
+            <div className="natural-card p-6 sm:p-8 bg-[#ffffff] border-2 border-[#cbdccb] shadow-[0_4px_20px_rgba(59,86,61,0.06)] relative overflow-hidden">
+              <div className="flex items-center justify-between mb-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#e5ede5] text-[#3b563d] text-xs font-semibold">
+                  <MessageSquare className="w-3.5 h-3.5 text-[#25D366]" />
+                  <span>Instant WhatsApp Lines</span>
+                </div>
+                <span className="flex items-center gap-1.5 text-[11px] font-mono text-[#3b563d] font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-[#25D366] animate-pulse" />
+                  Online
+                </span>
+              </div>
+
+              <h2 className="text-lg font-bold text-[#1c1917] mb-1.5">
+                Direct Engineering Support
+              </h2>
+              <p className="text-xs text-[#57534e] mb-5 leading-relaxed">
+                Connect directly with our automation specialists for fast scoping, RFP review, or technical inquiries.
+              </p>
+
+              <div className="space-y-3.5">
+                {/* Line 1 Card */}
+                <div className="p-3.5 rounded-xl bg-[#f7f4ee] border border-[#e7e2d8] space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] font-mono uppercase font-bold text-[#5f8861] block">
+                        {WHATSAPP_CONTACTS.line1.label}
+                      </span>
+                      <span className="text-xs font-bold text-[#1c1917] font-mono">
+                        {WHATSAPP_CONTACTS.line1.display}
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-[#78716c] font-medium">Primary Desk</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <a
+                      href={WHATSAPP_CONTACTS.line1.chatUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-semibold transition-colors shadow-sm"
+                    >
+                      <MessageSquare className="w-3.5 h-3.5" />
+                      Chat on WA
+                    </a>
+                    <a
+                      href={WHATSAPP_CONTACTS.line1.telUrl}
+                      className="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-[#ffffff] hover:bg-[#f2efe9] text-[#1c1917] border border-[#cbdccb] text-xs font-semibold transition-colors"
+                    >
+                      <Phone className="w-3.5 h-3.5 text-[#3b563d]" />
+                      Direct Call
+                    </a>
+                  </div>
+                </div>
+
+                {/* Line 2 Card */}
+                <div className="p-3.5 rounded-xl bg-[#f7f4ee] border border-[#e7e2d8] space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] font-mono uppercase font-bold text-[#5f8861] block">
+                        {WHATSAPP_CONTACTS.line2.label}
+                      </span>
+                      <span className="text-xs font-bold text-[#1c1917] font-mono">
+                        {WHATSAPP_CONTACTS.line2.display}
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-[#78716c] font-medium">Secondary Desk</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <a
+                      href={WHATSAPP_CONTACTS.line2.chatUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-semibold transition-colors shadow-sm"
+                    >
+                      <MessageSquare className="w-3.5 h-3.5" />
+                      Chat on WA
+                    </a>
+                    <a
+                      href={WHATSAPP_CONTACTS.line2.telUrl}
+                      className="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-[#ffffff] hover:bg-[#f2efe9] text-[#1c1917] border border-[#cbdccb] text-xs font-semibold transition-colors"
+                    >
+                      <Phone className="w-3.5 h-3.5 text-[#3b563d]" />
+                      Direct Call
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="natural-card p-6 sm:p-8 bg-[#ffffff]">
               <h2 className="text-lg font-bold text-[#1c1917] mb-6">
                 Official Agency Channels

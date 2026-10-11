@@ -11,8 +11,10 @@ import {
   Layout,
   ArrowRight,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  MessageSquare
 } from "lucide-react";
+import { WHATSAPP_CONTACTS } from "@/lib/config";
 
 const ICON_MAP: Record<string, any> = {
   Workflow,
@@ -120,9 +122,37 @@ export default function ServicesIndexPage() {
           <p className="text-xs sm:text-sm text-[#57534e] mb-6">
             Many client projects combine custom AI agents with n8n orchestrations and automated lead capture. We can scope an end-to-end architecture tailored to your stack.
           </p>
-          <Link href="/booking" className="btn-sage-primary text-xs py-2.5 px-6">
-            Discuss Custom Requirements
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
+            <Link href="/booking" className="btn-sage-primary text-xs py-2.5 px-6">
+              Discuss Custom Requirements
+            </Link>
+          </div>
+
+          {/* Quick WhatsApp Inquiry Buttons */}
+          <div className="pt-6 border-t border-[#cbdccb]/60 flex flex-wrap items-center justify-center gap-3 text-xs">
+            <span className="text-[#78716c] font-medium text-[11px] flex items-center gap-1.5">
+              <MessageSquare className="w-3.5 h-3.5 text-[#25D366]" />
+              Direct WhatsApp Support:
+            </span>
+            <a
+              href={WHATSAPP_CONTACTS.line1.chatUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#ffffff] border border-[#cbdccb] text-[#293a2b] hover:border-[#25D366] hover:bg-[#e5ede5] transition-colors font-mono text-[11px] font-semibold"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#25D366]" />
+              Line 1: {WHATSAPP_CONTACTS.line1.display}
+            </a>
+            <a
+              href={WHATSAPP_CONTACTS.line2.chatUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#ffffff] border border-[#cbdccb] text-[#293a2b] hover:border-[#25D366] hover:bg-[#e5ede5] transition-colors font-mono text-[11px] font-semibold"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#25D366]" />
+              Line 2: {WHATSAPP_CONTACTS.line2.display}
+            </a>
+          </div>
         </div>
       </div>
     </div>

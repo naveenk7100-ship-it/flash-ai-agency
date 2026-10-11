@@ -15,8 +15,10 @@ import {
   ShieldCheck,
   Building2,
   Clock,
-  ArrowLeft
+  ArrowLeft,
+  MessageSquare
 } from "lucide-react";
+import { WHATSAPP_CONTACTS } from "@/lib/config";
 
 const ICON_MAP: Record<string, any> = {
   Workflow,
@@ -125,13 +127,24 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
               <span className="text-xs text-[#78716c] block font-medium">Estimated Starting Scope</span>
               <span className="text-xl font-bold text-[#1c1917]">{srv.startingInvestment}</span>
             </div>
-            <Link
-              href={`/booking?service=${srv.id}`}
-              className="btn-sage-primary text-xs py-3 px-6 shadow-sm"
-            >
-              Inquire About {srv.title}
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+            <div className="flex flex-wrap items-center gap-2.5">
+              <a
+                href={WHATSAPP_CONTACTS.line1.chatUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 py-2.5 px-3.5 rounded-xl bg-[#ffffff] hover:bg-[#e5ede5] border border-[#cbdccb] text-[#293a2b] text-xs font-semibold transition-colors"
+              >
+                <MessageSquare className="w-3.5 h-3.5 text-[#25D366]" />
+                WhatsApp: {WHATSAPP_CONTACTS.line1.display}
+              </a>
+              <Link
+                href={`/booking?service=${srv.id}`}
+                className="btn-sage-primary text-xs py-3 px-6 shadow-sm"
+              >
+                Inquire About {srv.title}
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -227,13 +240,41 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
           <p className="text-xs sm:text-sm text-[#57534e] max-w-lg mx-auto mb-6 leading-relaxed">
             Submit a booking request with your specific system requirements. We&apos;ll review your stack and respond within 24 business hours.
           </p>
-          <Link
-            href={`/booking?service=${srv.id}`}
-            className="btn-sage-primary text-xs py-3 px-8 shadow-sm"
-          >
-            Schedule a Technical Discovery Call
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
+            <Link
+              href={`/booking?service=${srv.id}`}
+              className="btn-sage-primary text-xs py-3 px-8 shadow-sm"
+            >
+              Schedule a Technical Discovery Call
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          {/* Quick WhatsApp Inquiry Buttons */}
+          <div className="pt-6 border-t border-[#cbdccb]/60 flex flex-wrap items-center justify-center gap-3 text-xs">
+            <span className="text-[#78716c] font-medium text-[11px] flex items-center gap-1.5">
+              <MessageSquare className="w-3.5 h-3.5 text-[#25D366]" />
+              Direct WhatsApp Support:
+            </span>
+            <a
+              href={WHATSAPP_CONTACTS.line1.chatUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#ffffff] border border-[#cbdccb] text-[#293a2b] hover:border-[#25D366] hover:bg-[#e5ede5] transition-colors font-mono text-[11px] font-semibold"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#25D366]" />
+              Line 1: {WHATSAPP_CONTACTS.line1.display}
+            </a>
+            <a
+              href={WHATSAPP_CONTACTS.line2.chatUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#ffffff] border border-[#cbdccb] text-[#293a2b] hover:border-[#25D366] hover:bg-[#e5ede5] transition-colors font-mono text-[11px] font-semibold"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#25D366]" />
+              Line 2: {WHATSAPP_CONTACTS.line2.display}
+            </a>
+          </div>
         </div>
       </div>
     </div>

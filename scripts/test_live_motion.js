@@ -102,14 +102,48 @@ async function main() {
   console.log("Sample 2 (T=1.5s):", JSON.stringify(sample2, null, 2));
 
   if (sample1.heroData && sample2.heroData) {
-    console.log("\n--- Motion Delta Analysis ---");
+    console.log("\n--- Motion Delta Analysis (Workflow Core & Floating 3D Panels) ---");
     console.log("Frames Rendered in 1.5s:", sample2.heroData.frameCount - sample1.heroData.frameCount);
-    console.log("Ring 1 Rotation Delta (Z):", (sample2.heroData.ring1Z - sample1.heroData.ring1Z).toFixed(4), "radians");
-    console.log("Ring 2 Rotation Delta (Z):", (sample2.heroData.ring2Z - sample1.heroData.ring2Z).toFixed(4), "radians");
-    console.log("Sculpture Levitation Y:", sample2.heroData.boltY.toFixed(4));
-    console.log("Particles Swirl Rotation Y:", (sample2.heroData.particleRotY - sample1.heroData.particleRotY).toFixed(4), "radians");
-    console.log("Verdict:", sample2.heroData.frameCount > sample1.heroData.frameCount ? "CONFIRMED: VISIBLE 3D MOTION ACTIVE" : "STATIONARY");
+    console.log("Workflow Core Float Y:", sample2.heroData.coreFloatY?.toFixed(4));
+    console.log("Websites Glass Panel Float Y:", sample2.heroData.webPanelY?.toFixed(4));
+    console.log("Instagram Glass Panel Float Y:", sample2.heroData.igPanelY?.toFixed(4));
+    console.log("AI Agents Glass Panel Float Y:", sample2.heroData.agentPanelY?.toFixed(4));
+    console.log("Master Scene Rotation Y Delta:", ((sample2.heroData.masterRotationY || 0) - (sample1.heroData.masterRotationY || 0)).toFixed(4), "radians");
+    console.log("Verdict:", sample2.heroData.frameCount > sample1.heroData.frameCount ? "CONFIRMED: VISIBLE 3D WORKFLOW MOTION ACTIVE" : "STATIONARY");
   }
+
+  // Check WhatsApp Links on Page
+  console.log("\n--- WhatsApp Contacts Link Verification ---");
+  const waCheck = await new Promise((res) => {
+    ws.send(
+      JSON.stringify({
+        id: 45,
+        method: "Runtime.evaluate",
+        params: {
+          expression: `(() => {
+            const links = Array.from(document.querySelectorAll("a[href*='wa.me']"));
+            const line1 = links.filter(l => l.href.includes("919398421460"));
+            const line2 = links.filter(l => l.href.includes("918523846914"));
+            return {
+              totalWaLinks: links.length,
+              line1Count: line1.length,
+              line2Count: line2.length,
+              sampleHref1: line1[0]?.href,
+              sampleHref2: line2[0]?.href
+            };
+          })()`,
+          returnByValue: true
+        }
+      })
+    );
+    const prev = ws.onmessage;
+    ws.onmessage = (e) => {
+      prev(e);
+      const data = JSON.parse(e.data);
+      if (data.id === 45) res(data.result?.result?.value);
+    };
+  });
+  console.log("WhatsApp Links Result:", JSON.stringify(waCheck, null, 2));
 
   // Scroll down and inspect reveal animation classes
   console.log("\n--- Scroll Entrance Animation Verification ---");

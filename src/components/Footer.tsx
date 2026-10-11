@@ -106,14 +106,14 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Trust & Legal */}
+          {/* Trust & WhatsApp Lines */}
           <div>
             <h4 className="text-xs font-semibold text-[#1c1917] tracking-wider uppercase mb-4">
-              Contact & Trust
+              Direct Contact & WhatsApp
             </h4>
-            <ul className="space-y-2.5 text-xs">
+            <ul className="space-y-3 text-xs">
               <li className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-[#5f8861]" />
+                <Mail className="w-3.5 h-3.5 text-[#5f8861] shrink-0" />
                 <a href="mailto:hello@flashai.agency" className="hover:text-[#1c1917] transition-colors">
                   hello@flashai.agency
                 </a>
@@ -121,14 +121,53 @@ export function Footer() {
               <li className="text-[#78716c]">
                 Remote First • Worldwide Operations
               </li>
-              <li className="pt-2">
-                <Link
-                  href="/booking"
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-1.5 rounded-lg bg-[#e5ede5] text-[#3b563d] hover:bg-[#cbdccb] border border-[#cbdccb] transition-all"
-                >
-                  Book Discovery Call
-                  <ArrowUpRight className="w-3.5 h-3.5" />
-                </Link>
+
+              {/* Dedicated WhatsApp Line 1 */}
+              <li className="p-2.5 rounded-xl bg-white border border-[#cbdccb]">
+                <div className="text-[11px] font-bold text-[#1c1917] mb-1.5 flex items-center justify-between">
+                  <span>Line 1: +91 93984 21460</span>
+                  <span className="text-[9px] font-mono text-[#3b563d] bg-[#e5ede5] px-1 rounded">24/7</span>
+                </div>
+                <div className="flex gap-2">
+                  <a
+                    href="https://wa.me/919398421460"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 inline-flex items-center justify-center gap-1 py-1.5 px-2 rounded-md bg-[#3b563d] text-white text-[11px] font-semibold hover:bg-[#293a2b] transition-colors"
+                  >
+                    WhatsApp <ArrowUpRight className="w-2.5 h-2.5" />
+                  </a>
+                  <a
+                    href="tel:+919398421460"
+                    className="inline-flex items-center justify-center py-1.5 px-2.5 rounded-md bg-[#f7f4ee] border border-[#cbdccb] text-[#1c1917] text-[11px] font-semibold hover:bg-[#e5ede5] transition-colors"
+                  >
+                    Call
+                  </a>
+                </div>
+              </li>
+
+              {/* Dedicated WhatsApp Line 2 */}
+              <li className="p-2.5 rounded-xl bg-white border border-[#cbdccb]">
+                <div className="text-[11px] font-bold text-[#1c1917] mb-1.5 flex items-center justify-between">
+                  <span>Line 2: +91 85238 46914</span>
+                  <span className="text-[9px] font-mono text-[#3b563d] bg-[#e5ede5] px-1 rounded">24/7</span>
+                </div>
+                <div className="flex gap-2">
+                  <a
+                    href="https://wa.me/918523846914"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 inline-flex items-center justify-center gap-1 py-1.5 px-2 rounded-md bg-[#3b563d] text-white text-[11px] font-semibold hover:bg-[#293a2b] transition-colors"
+                  >
+                    WhatsApp <ArrowUpRight className="w-2.5 h-2.5" />
+                  </a>
+                  <a
+                    href="tel:+918523846914"
+                    className="inline-flex items-center justify-center py-1.5 px-2.5 rounded-md bg-[#f7f4ee] border border-[#cbdccb] text-[#1c1917] text-[11px] font-semibold hover:bg-[#e5ede5] transition-colors"
+                  >
+                    Call
+                  </a>
+                </div>
               </li>
             </ul>
           </div>

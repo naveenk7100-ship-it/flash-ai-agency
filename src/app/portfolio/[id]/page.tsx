@@ -8,8 +8,14 @@ import {
   Video,
   CheckCircle2,
   ShieldCheck,
-  Tag
+  Tag,
+  MessageSquare,
+  Phone,
+  Sparkles,
+  Share2,
+  Globe
 } from "lucide-react";
+import { WHATSAPP_CONTACTS } from "@/lib/config";
 
 interface ProjectDetailProps {
   params: Promise<{ id: string }>;
@@ -147,6 +153,96 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
           </div>
         </div>
 
+        {/* Specialized Interactive Visual Pipeline for FLASH.Ai Social */}
+        {project.id === "flash-ai-social" && (
+          <div className="natural-card p-8 sm:p-10 mb-8 bg-[#ffffff] border-2 border-[#cbdccb] shadow-[0_4px_24px_rgba(59,86,61,0.08)]">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#e7e2d8]">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#25D366] animate-pulse" />
+                <h2 className="text-xl font-bold text-[#1c1917]">
+                  Meta Instagram Autonomous Publishing Pipeline
+                </h2>
+              </div>
+              <span className="text-[11px] font-mono font-bold text-[#3b563d] bg-[#e5ede5] px-2.5 py-1 rounded">
+                API V21.0 GRAPH
+              </span>
+            </div>
+
+            {/* Pipeline Step Sequence */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <div className="p-4 rounded-xl bg-[#f7f4ee] border border-[#e7e2d8] space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="w-6 h-6 rounded-lg bg-[#3b563d] text-white flex items-center justify-center font-mono text-xs font-bold">1</span>
+                  <span className="text-[10px] font-mono text-[#5f8861] uppercase font-bold">Inbound</span>
+                </div>
+                <h4 className="text-xs font-bold text-[#1c1917]">Trend & Topic Trigger</h4>
+                <p className="text-[11px] text-[#57534e] leading-relaxed">
+                  Scheduled cron monitors content calendar pillars and indexes high-velocity topics.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-[#f7f4ee] border border-[#e7e2d8] space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="w-6 h-6 rounded-lg bg-[#3b563d] text-white flex items-center justify-center font-mono text-xs font-bold">2</span>
+                  <span className="text-[10px] font-mono text-[#5f8861] uppercase font-bold">Generative</span>
+                </div>
+                <h4 className="text-xs font-bold text-[#1c1917]">Multi-Model AI Drafting</h4>
+                <p className="text-[11px] text-[#57534e] leading-relaxed">
+                  LLM drafts contextual Reels script, carousel text slides, and verified hashtags with strict brand tone.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-[#e5ede5] border border-[#cbdccb] space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="w-6 h-6 rounded-lg bg-[#5f8861] text-white flex items-center justify-center font-mono text-xs font-bold">3</span>
+                  <span className="text-[10px] font-mono text-[#293a2b] uppercase font-bold">Gatekeeper</span>
+                </div>
+                <h4 className="text-xs font-bold text-[#1c1917]">1-Click Human Review</h4>
+                <p className="text-[11px] text-[#293a2b] leading-relaxed">
+                  Slack/Telegram notification delivers one-click Approve / Edit / Reject buttons. Zero hallucinated postings.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-[#f7f4ee] border border-[#e7e2d8] space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="w-6 h-6 rounded-lg bg-[#3b563d] text-white flex items-center justify-center font-mono text-xs font-bold">4</span>
+                  <span className="text-[10px] font-mono text-[#25D366] uppercase font-bold">Publish</span>
+                </div>
+                <h4 className="text-xs font-bold text-[#1c1917]">Meta Graph API</h4>
+                <p className="text-[11px] text-[#57534e] leading-relaxed">
+                  Media container generated and published to Instagram Business Profile at optimal target audience hour.
+                </p>
+              </div>
+            </div>
+
+            {/* Simulated Live Post Telemetry Card */}
+            <div className="p-4 rounded-xl bg-[#121b14] text-[#fdfbf7] border border-[#293a2b] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white font-bold text-xs">
+                  IG
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-bold font-mono">@flashai.agency</span>
+                    <span className="w-2 h-2 rounded-full bg-[#25D366]" />
+                  </div>
+                  <span className="text-[10px] text-[#86c289] font-mono">STATUS: PUBLISHED // CONTAINER #839219</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-4 text-xs font-mono">
+                <div>
+                  <span className="text-[10px] text-[#78716c] block">CYCLE TIME</span>
+                  <span className="font-bold text-[#86c289]">&lt; 3 mins</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-[#78716c] block">HUMAN REVIEW</span>
+                  <span className="font-bold text-[#86c289]">VERIFIED</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* 4. Outcome & Metrics */}
         <div className="natural-card p-8 sm:p-10 mb-8 bg-[#ffffff]">
           <h2 className="text-xl font-bold text-[#1c1917] mb-3">
@@ -212,13 +308,41 @@ export default async function ProjectDetailPage({ params }: ProjectDetailProps) 
           <p className="text-xs sm:text-sm text-[#57534e] max-w-lg mx-auto mb-6">
             We can adapt this architectural blueprint to your organization&apos;s data sources, APIs, and security parameters.
           </p>
-          <Link
-            href={`/booking?service=ai-workflow-automation&projectRef=${project.id}`}
-            className="btn-sage-primary text-xs py-3 px-8"
-          >
-            Schedule a Technical Discovery Call
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
+            <Link
+              href={`/booking?service=ai-workflow-automation&projectRef=${project.id}`}
+              className="btn-sage-primary text-xs py-3 px-8"
+            >
+              Schedule a Technical Discovery Call
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          {/* Quick WhatsApp Inquiry Buttons */}
+          <div className="pt-6 border-t border-[#cbdccb]/60 flex flex-wrap items-center justify-center gap-3 text-xs">
+            <span className="text-[#78716c] font-medium text-[11px] flex items-center gap-1.5">
+              <MessageSquare className="w-3.5 h-3.5 text-[#25D366]" />
+              Quick WhatsApp Consultation:
+            </span>
+            <a
+              href={WHATSAPP_CONTACTS.line1.chatUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#ffffff] border border-[#cbdccb] text-[#293a2b] hover:border-[#25D366] hover:bg-[#e5ede5] transition-colors font-mono text-[11px] font-semibold"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#25D366]" />
+              Line 1: {WHATSAPP_CONTACTS.line1.display}
+            </a>
+            <a
+              href={WHATSAPP_CONTACTS.line2.chatUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#ffffff] border border-[#cbdccb] text-[#293a2b] hover:border-[#25D366] hover:bg-[#e5ede5] transition-colors font-mono text-[11px] font-semibold"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#25D366]" />
+              Line 2: {WHATSAPP_CONTACTS.line2.display}
+            </a>
+          </div>
         </div>
       </div>
     </div>

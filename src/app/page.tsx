@@ -20,7 +20,8 @@ import {
   Layers,
   Zap,
   Globe2,
-  Bot
+  Bot,
+  MessageSquare
 } from "lucide-react";
 import { AGENCY_SERVICES, AGENCY_FAQS } from "@/lib/data";
 import { db } from "@/lib/db";
@@ -28,7 +29,7 @@ import { HeroScene3D } from "@/components/HeroScene3D";
 import { ScrollStoryController } from "@/components/ScrollStoryController";
 import { InteractiveProcessTimeline } from "@/components/InteractiveProcessTimeline";
 import { FaqAccordion } from "@/components/FaqAccordion";
-import { AGENCY_CONFIG } from "@/lib/config";
+import { AGENCY_CONFIG, WHATSAPP_CONTACTS } from "@/lib/config";
 
 const ICON_MAP: Record<string, any> = {
   Workflow,
@@ -97,16 +98,32 @@ export default async function HomePage() {
                 >
                   Explore Our Work
                 </Link>
+              </div>
 
-                {AGENCY_CONFIG.hasPhone && (
-                  <a
-                    href={AGENCY_CONFIG.telLink}
-                    className="inline-flex items-center justify-center gap-2 text-xs font-semibold px-4 py-3 text-[#3b563d] hover:text-[#1c1917] transition-colors"
-                  >
-                    <Phone className="w-4 h-4" />
-                    <span>{AGENCY_CONFIG.phone}</span>
-                  </a>
-                )}
+              {/* Instant WhatsApp Quick Contacts */}
+              <div className="reveal-item reveal-delay-3 flex flex-wrap items-center gap-2 pt-1 text-xs">
+                <span className="text-[#78716c] font-medium text-[11px] flex items-center gap-1.5 shrink-0">
+                  <MessageSquare className="w-3.5 h-3.5 text-[#25D366]" />
+                  WhatsApp Direct:
+                </span>
+                <a
+                  href={WHATSAPP_CONTACTS.line1.chatUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#ffffff] border border-[#cbdccb] text-[#293a2b] hover:border-[#25D366] hover:bg-[#e5ede5] transition-colors font-mono text-[11px] font-semibold shadow-sm"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#25D366]" />
+                  Line 1: {WHATSAPP_CONTACTS.line1.display}
+                </a>
+                <a
+                  href={WHATSAPP_CONTACTS.line2.chatUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#ffffff] border border-[#cbdccb] text-[#293a2b] hover:border-[#25D366] hover:bg-[#e5ede5] transition-colors font-mono text-[11px] font-semibold shadow-sm"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#25D366]" />
+                  Line 2: {WHATSAPP_CONTACTS.line2.display}
+                </a>
               </div>
 
               {/* Trust Metric Strip */}
@@ -287,16 +304,44 @@ export default async function HomePage() {
                     </div>
 
                     {/* Architecture Pipeline Preview Strip */}
-                    <div className="mb-6 p-3 rounded-lg bg-[#fdfbf7] border border-[#e7e2d8] flex items-center justify-between text-[11px] font-mono text-[#57534e] overflow-x-auto">
-                      <span className="flex items-center gap-1 text-[#3b563d] font-semibold shrink-0">
-                        <Zap className="w-3 h-3" /> Event Ingest
-                      </span>
-                      <span className="text-[#a7c3a8] px-1 shrink-0">→</span>
-                      <span className="shrink-0">Guardrail Engine</span>
-                      <span className="text-[#a7c3a8] px-1 shrink-0">→</span>
-                      <span className="shrink-0">LLM Reasoning</span>
-                      <span className="text-[#a7c3a8] px-1 shrink-0">→</span>
-                      <span className="text-[#3b563d] font-semibold shrink-0">Zero-Loss Sink</span>
+                    <div className="mb-6 p-3 rounded-lg bg-[#fdfbf7] border border-[#cbdccb]/80 flex items-center justify-between text-[11px] font-mono text-[#57534e] overflow-x-auto gap-2">
+                      {p.id === "flash-ai-social" ? (
+                        <>
+                          <span className="flex items-center gap-1 text-[#3b563d] font-semibold shrink-0">
+                            <Sparkles className="w-3 h-3 text-[#25D366]" /> Calendar Trigger
+                          </span>
+                          <span className="text-[#a7c3a8] shrink-0">→</span>
+                          <span className="shrink-0 text-[#1c1917] font-semibold">AI Multi-Draft</span>
+                          <span className="text-[#a7c3a8] shrink-0">→</span>
+                          <span className="shrink-0 text-[#3b563d] font-semibold">Human Review</span>
+                          <span className="text-[#a7c3a8] shrink-0">→</span>
+                          <span className="text-[#25D366] font-bold shrink-0">Meta Graph API</span>
+                        </>
+                      ) : p.id === "trendpost" ? (
+                        <>
+                          <span className="flex items-center gap-1 text-[#3b563d] font-semibold shrink-0">
+                            <Zap className="w-3 h-3 text-[#5f8861]" /> Trend Radar
+                          </span>
+                          <span className="text-[#a7c3a8] shrink-0">→</span>
+                          <span className="shrink-0 text-[#1c1917] font-semibold">Virality Score</span>
+                          <span className="text-[#a7c3a8] shrink-0">→</span>
+                          <span className="shrink-0 text-[#3b563d] font-semibold">LLM Hook Gen</span>
+                          <span className="text-[#a7c3a8] shrink-0">→</span>
+                          <span className="text-[#3b563d] font-bold shrink-0">Telegram Dispatch</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="flex items-center gap-1 text-[#3b563d] font-semibold shrink-0">
+                            <Zap className="w-3 h-3 text-[#5f8861]" /> Event Ingest
+                          </span>
+                          <span className="text-[#a7c3a8] shrink-0">→</span>
+                          <span className="shrink-0 text-[#1c1917] font-semibold">Guardrail Engine</span>
+                          <span className="text-[#a7c3a8] shrink-0">→</span>
+                          <span className="shrink-0 text-[#3b563d] font-semibold">LLM Reasoning</span>
+                          <span className="text-[#a7c3a8] shrink-0">→</span>
+                          <span className="text-[#3b563d] font-bold shrink-0">Zero-Loss Sink</span>
+                        </>
+                      )}
                     </div>
 
                     {/* Tech Stack Pills */}
@@ -454,7 +499,7 @@ export default async function HomePage() {
               </p>
             </div>
 
-            <div className="reveal-item reveal-delay-2 flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+            <div className="reveal-item reveal-delay-2 flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
               <Link
                 href="/booking"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 py-4 px-9 rounded-xl font-semibold text-base bg-[#496d4b] hover:bg-[#5f8861] text-white shadow-[0_0_30px_rgba(95,136,97,0.35)] border border-[#86c289]/50 transition-all duration-300 hover:scale-[1.02]"
@@ -468,6 +513,32 @@ export default async function HomePage() {
               >
                 Send an RFP / Custom Inquiry
               </Link>
+            </div>
+
+            {/* Direct WhatsApp Engineering Chat Links */}
+            <div className="reveal-item reveal-delay-2 flex flex-wrap items-center justify-center gap-2.5 mb-12 text-xs">
+              <span className="text-[#86c289] font-mono text-[11px] flex items-center gap-1.5">
+                <MessageSquare className="w-3.5 h-3.5 text-[#25D366]" />
+                WhatsApp Direct:
+              </span>
+              <a
+                href={WHATSAPP_CONTACTS.line1.chatUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#1a271c] hover:bg-[#233527] border border-[#2b3e2e] hover:border-[#25D366] text-[#e5ede5] hover:text-white transition-colors font-mono text-[11px] font-semibold"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[#25D366]" />
+                Line 1: {WHATSAPP_CONTACTS.line1.display}
+              </a>
+              <a
+                href={WHATSAPP_CONTACTS.line2.chatUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#1a271c] hover:bg-[#233527] border border-[#2b3e2e] hover:border-[#25D366] text-[#e5ede5] hover:text-white transition-colors font-mono text-[11px] font-semibold"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[#25D366]" />
+                Line 2: {WHATSAPP_CONTACTS.line2.display}
+              </a>
             </div>
 
             {/* Futuristic Telemetry Trust Markers */}
